@@ -13,7 +13,7 @@ const userSchema = Schema({
     name: {
         type: String
     },
-    pasword: {
+    password: {
         type: String
     },
     email: {
@@ -47,6 +47,9 @@ const userSchema = Schema({
 
 
 const User = Model('User', userSchema)
-console.log(Schema, Model, User)
+// console.log(User.schema.tree) //Schema do Model
 
-module.exports = User
+module.exports = {
+    User: User,
+    userSchema: userSchema
+}
