@@ -1,3 +1,3 @@
 # Rafiki Back End
 
-``` npm start ```
+To run the server ``` npm start ```

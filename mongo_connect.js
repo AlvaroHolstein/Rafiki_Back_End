@@ -8,5 +8,5 @@ console.log(`Mongo server running on ${conn.name} db`)
 module.exports = {
     conn: conn,
     Schema: mongoose.Schema,
-    Model: mongoose.Model 
+    Model: mongoose.model 
 }

@@ -1,5 +1,11 @@
 const { Schema, Model } = require('../../mongo_connect')
 
+/**
+ * Propriedades Calculadas:
+ *  Rank
+ *  Level
+ *  Badges
+ */
 const userSchema = Schema({
     id: {
         type: Number
@@ -16,13 +22,31 @@ const userSchema = Schema({
     experience: {
         type: Number
     },
-    level: {
-        type: Number
-    },
-    rank: {
+    description: {
         type: String
     },
-    
+    picture: {
+        type: String
+    },
+    follow: {
+        type: [Number]
+    },
+    year: {
+        type: Number
+    },
+    course: {
+        type: String
+    },
+    upvotes: {
+        type: Number
+    },
+    notifications: {
+        type: [Number]
+    }
 })
 
-console.log(Schema, Model)
+
+const User = Model('User', userSchema)
+console.log(Schema, Model, User)
+
+module.exports = User
