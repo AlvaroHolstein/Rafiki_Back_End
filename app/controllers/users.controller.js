@@ -10,6 +10,12 @@ let crudUser = {
                 res.json(collection)
             }
         })
+    },
+    findOneByName(res, name) {
+
+    },
+    findOneByEmail(res, mail) {
+        
     }
 }
 

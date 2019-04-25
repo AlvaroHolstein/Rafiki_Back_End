@@ -38,7 +38,8 @@ const userSchema = Schema({
         type: String
     },
     upvotes: {
-        type: Number
+        type: Array, 
+        default: []
     },
     notifications: {
         type: [Number]
