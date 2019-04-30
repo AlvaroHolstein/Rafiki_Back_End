@@ -5,6 +5,7 @@ const cors = require('cors')
 require('dotenv').config()
 const userController = require('./app/controllers/users.controller')
 const badgeController = require('./app/controllers/badges.controller')
+const threadController = require('./app/controllers/threads.controller')
 
 const app = express()
 
@@ -24,7 +25,7 @@ app.get('/allusers', (req, res) => {
     userController.findAll(res)
 })
 app.get('/allthreads', (req, res) => {
-    
+    threadController.findAll(res)
 })
 
 app.get('/allbadges', (req, res) => {
