@@ -10,14 +10,16 @@ const commentSchema=Schema({
     idUser:{
         type:Number
     },
-    answer:{
+    comment:{
         type:String
     },
     upvotes:{
-        type:Number
+        type:Number,
+        default:0
     },
     date:{
-        type:Date
+        type:Date,
+        default:Date.now
     }
 })
 
