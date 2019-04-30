@@ -16,7 +16,7 @@ let crudBadge = {
 
     addBadge(name, goal, desc, category) {
         let badges = null
-        let id = 0
+        let id = 1
         Badge.find({}, (err, collection) => {
             if (err) throw err;
             badges = collection
