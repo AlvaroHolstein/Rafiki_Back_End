@@ -14,10 +14,12 @@ const answerSchema=Schema({
         type:String
     },
     upvotes:{
-        type:Number
+        type:Number,
+        default:0
     },
     date:{
-        type:Date
+        type:Date,
+        default:Date.now
     }
 })
 
