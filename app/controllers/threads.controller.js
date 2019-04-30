@@ -126,3 +126,4 @@ let crudThread = {
         })
     }
 }
+module.exports = crudThread;
