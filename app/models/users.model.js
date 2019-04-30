@@ -46,7 +46,6 @@ const userSchema = Schema({
     }
 })
 
-
 const User = Model('User', userSchema)
 // console.log(User.schema.tree) //Schema do Model
 

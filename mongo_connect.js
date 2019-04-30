@@ -1,12 +1,24 @@
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb://127.0.0.1:27017/Rafiki?gssapiServiceName=mongodb', { useNewUrlParser: true })
+mongoose.connect('mongodb+srv://admin:rafiki123@rafikicluster-uj5p1.mongodb.net/Rafiki?retryWrites=true', {
+    useNewUrlParser: true,
+    // pass: '12345678',
+    // password: '12345678',
+    // user: 'admin'
+})
 
 const conn = mongoose.connection
 
-console.log(`Mongo server running on ${conn.name} db`)
+conn.on('error', (err) => {
+    console.log(err)
+})
+
+conn.once('open', () => {
+    console.log(`Mongo server running on ${conn.name} db`)
+})
+
 module.exports = {
     conn: conn,
     Schema: mongoose.Schema,
-    Model: mongoose.model 
-}
+    Model: mongoose.model
+}   
