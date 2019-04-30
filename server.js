@@ -22,6 +22,9 @@ app.get('/allusers', (req, res) => {
     //Função criada no controller
     userController.findAll(res)
 })
+app.get('/allthreads', (req, res) => {
+    
+})
 
 app.listen(port, () => {
     console.log(`Server running on port :${port}`)
