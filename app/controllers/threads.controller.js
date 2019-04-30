@@ -2,7 +2,7 @@ const {Thread} = require("../models/threads.model")
 
 let crudThread = {
     //Add Thread
-    addThread(user,title,question,tags,date){
+    addThread(user,title,question,tags){
         let id =1 
 
         let threads = []
@@ -30,7 +30,7 @@ let crudThread = {
             question:question,
             tags:tags,
             upvotes:0,
-            date:date,
+            date:Date.now,
             views:0
         })
         newThread.save(function(err){
