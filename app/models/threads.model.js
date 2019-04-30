@@ -18,9 +18,10 @@ const threadSchema = Schema({
     question:{
         type: String
     },
-    tags:{
-        type: Array
-    },
+    tags:[{
+        id:Number,
+        text:String
+    }],
     upvotes:{
         type: Number
     },

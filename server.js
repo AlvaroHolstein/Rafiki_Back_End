@@ -4,6 +4,7 @@ const session = require('express-session')
 const cors = require('cors')
 require('dotenv').config()
 const userController = require('./app/controllers/users.controller')
+const badgeController = require('./app/controllers/badges.controller')
 
 const app = express()
 
@@ -24,6 +25,11 @@ app.get('/allusers', (req, res) => {
 })
 app.get('/allthreads', (req, res) => {
     
+})
+
+app.get('/allbadges', (req, res) => {
+    //badges.controller
+    badgeController.findAll(res)
 })
 
 app.listen(port, () => {
