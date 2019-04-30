@@ -14,22 +14,39 @@ let crudTag = {
 
   //Add Tag
   addTag(text) {
-    let id; //Get the last ID
+    let tags = null
 
-    //Before Inserting Check if there is already any Tag with that text
-    let newTag = Tag({
-      id: id,
-      text: text
-    });
-
-    newTag.save(function(err) {
+    let id = 1; //Get the last ID
+    Tag.find({}, (err, collection) => {
       if (err) throw err;
-      console.log("Tag Added");
-    });
+      tags = collection
+    })
+    //check name 
+    let exist = tags.find(tag => tag.text == text)
+
+    if (!exist) {
+      if (tags.length != 0) {
+        tags.sort(function (a, b) {
+          if (a.id > b.id) return 1;
+          if (a.id < b.id) return -1;
+        })
+        id = tags[tags.length - 1].id + 1;
+      }
+      let newTag = Tag({
+        id: id,
+        text: text
+      });
+
+      newTag.save(function (err) {
+        if (err) throw err;
+        console.log("Tag Added");
+      });
+    }
+
   },
   //Delete Tag
   deleteTag(id) {
-    Tag.findByIdAndRemove(id, function(err) {
+    Tag.findByIdAndRemove(id, function (err) {
       if (err) throw err;
       console.log("Tag Deleted");
     });
