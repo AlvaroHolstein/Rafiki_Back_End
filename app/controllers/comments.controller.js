@@ -57,3 +57,5 @@ let crudComment={
         })
     }
 }
+
+module.exports = crudComment
