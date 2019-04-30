@@ -6,9 +6,12 @@ const threadSchema = Schema({
     id:{
         type: Number
     },
-    userid:{
-        type: Number
-    },
+    userInfo:{
+        userid:Number,
+        photo: String,
+        name: String,
+        rank:String     
+    },  
     title:{
         type: String
     },

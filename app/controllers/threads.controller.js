@@ -2,7 +2,7 @@ const {Thread} = require("../models/threads.model")
 
 let crudThread = {
     //Add Thread
-    addThread(userid,title,question,tags,date){
+    addThread(user,title,question,tags,date){
         let id =1 
 
         let threads = []
@@ -20,7 +20,12 @@ let crudThread = {
         }
         let newThread= Thread({
             id:id,
-            userid:userid,
+            userInfo:{
+                userid:user.id,
+                photo:user.photo,
+                name:user.name,
+                rank:user.rank
+            },
             title:title,
             question:question,
             tags:tags,
@@ -75,13 +80,49 @@ let crudThread = {
             if(err)throw err
             res.json(collection)
         })
-    }
- 
+    },
+
+    //Mudar Informação do user
+    updateUserInfo(user){
+        Thread.findByIdAndUpdate(user.userid,{userInfo:user},function(err,thread){
+            if(err)throw err;
+            console.log(thread)
+        })
+    },
+
     //Close Thread
-    
+    closeDate(id){
+        Thread.findByIdAndUpdate(id,{closeDate:Date.now},function(err,thread){
+            if(err)throw err;
+            console.log(thread)
+        })
+    },
+    //Add View
+    addView(id){
+        Thread.findByIdAndUpdate(id,{$inc:{views:1}},function(err,thread){
+            if(err)throw err;
+            console.log(thread)
+        })
+    },
     //Add Upvote
-
+    addUpvote(id){
+        Thread.findByIdAndUpdate(id,{$inc:{upvotes:1}},function(err,thread){
+            if(err)throw err;
+            console.log(thread)
+        })
+    },
     //Remove Upvote
-
+    removeUpvote(id){
+        Thread.findByIdAndUpdate(id,{$inc:{upvotes:-1}},function(err,thread){
+            if(err)throw err;
+            console.log(thread)
+        })
+    },
     //Delete Thread
+    deleteThread(id){
+        Thread.findByIdAndRemove(id,function(err){
+            if(err)throw err;
+            console.log("Thread Deleted")
+        })
+    }
 }
