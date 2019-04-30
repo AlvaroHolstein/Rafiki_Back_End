@@ -7,7 +7,7 @@ let crudUser = {
                 console.log(err, 'erro')
             }
             else {
-                console.log(collection)
+                console.log(collection, 'collection')
                 res.json(collection)
             }
         })

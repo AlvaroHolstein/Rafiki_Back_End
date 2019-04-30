@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb+srv://admin:rafiki123@rafikicluster-uj5p1.mongodb.net/RafikiDB?retryWrites=true', {
+mongoose.connect('mongodb+srv://admin:rafiki123@rafikicluster-uj5p1.mongodb.net/Rafiki?retryWrites=true', {
     useNewUrlParser: true,
     // pass: '12345678',
     // password: '12345678',
