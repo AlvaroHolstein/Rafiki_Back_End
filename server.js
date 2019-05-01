@@ -12,6 +12,12 @@ const app = express()
 const port = process.env.PORT || 80
 
 app.use(cors())
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
+app.use((req, res, next) => {
+    // console.log(req.body)
+    next()
+})
 /**
  * Fazer rotas 
  */
@@ -20,10 +26,27 @@ app.get('/', (req, res) => {
     res.send('Back End Rafiki')
 })
 
+/**
+ * User paths
+ */
 app.get('/allusers', (req, res) => {
     //Função criada no controller
     userController.findAll(res)
 })
+
+app.get('/userByName', (req, res) => {
+    userController.findOneByName(res, req.body.name)  
+})
+app.put('/updateuser', (req, res) => {
+    // console.log(req.body.user, "/updateUser")
+    userController.updateUser(res, req.body.user)
+})
+app.post('/adduser', (req, res) => {
+    userController.insertUser(res, req.body.user)
+})
+/**
+ * Thread paths
+ */
 app.get('/allthreads', (req, res) => {
     threadController.findAll(res)
 })
