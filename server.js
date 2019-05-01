@@ -54,11 +54,11 @@ app.get("/allthreads", (req, res) => {
 
 app.get("/findTag", (req, res) => {
   //Working
-  threadController.findByTag(res, ["Vue.js"]);
+  threadController.findByTag(res, ["Vue.js", "JAVASCRIPT"]);
 });
 app.get("/findkeyword", (req, res) => {
-  //Check Later
-  threadController.findByKeyword(res, "Thread");
+  //Working
+  threadController.findByKeyword(res, "TESTE");
 });
 
 app.post("/newThread", (req, res) => {
@@ -66,8 +66,8 @@ app.post("/newThread", (req, res) => {
   threadController.addThread(res, req.body.thread);
 });
 
+//badges.controller
 app.get("/allbadges", (req, res) => {
-  //badges.controller
   badgeController.findAll(res);
 });
 

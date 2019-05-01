@@ -65,7 +65,7 @@ let crudThread = {
         for (let i = 0; i < tags.length; i++) {
           threads = threads.filter(thread => {
             for (let j = 0; j < thread.tags.length; j++)
-              if (thread.tags[j].text == tags[i]) {
+              if (thread.tags[j].text.toLowerCase() == tags[i].toLowerCase()) {
                 return true;
               }
           });
@@ -80,7 +80,10 @@ let crudThread = {
   findByKeyword(res, keyword) {
     Thread.find(
       {
-        $or: [{ title: "%" + keyword + "%" }, { question: "%" + keyword + "%" }]
+        $or: [
+          { title: { $regex: keyword, $options: "i" } },
+          { question: { $regex: keyword, $options: "i" } }
+        ]
       },
       (err, collection) => {
         if (err) throw err;
