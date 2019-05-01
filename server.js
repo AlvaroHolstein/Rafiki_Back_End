@@ -12,14 +12,14 @@ const app = express()
 const port = process.env.PORT || 80
 
 app.use(cors())
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use((req, res, next) => {
     // console.log(req.body)
     next()
 })
 /**
- * Fazer rotas 
+ * Fazer rotas
  */
 
 app.get('/', (req, res) => {
@@ -35,7 +35,7 @@ app.get('/allusers', (req, res) => {
 })
 
 app.get('/userByName', (req, res) => {
-    userController.findOneByName(res, req.body.name)  
+    userController.findOneByName(res, req.body.name)
 })
 app.put('/updateuser', (req, res) => {
     // console.log(req.body.user, "/updateUser")
@@ -56,8 +56,20 @@ app.get('/allbadges', (req, res) => {
     badgeController.findAll(res)
 })
 
-app.listen(port, () => {
-    console.log(`Server running on port :${port}`)
-})
 
-module.exports = app; 
+app.get("/findTag", (req, res) => {
+    threadController.findByTag(res, ["Vue.js"]);
+});
+app.get("/findkeyword", (req, res) => {
+    threadController.findByKeyword(res, "Thread");
+});
+//Tag.controller
+app.get("/allTags", (req, res) => {
+    tagController.findAll(res);
+});
+
+app.listen(port, () => {
+    console.log(`Server running on port :${port}`);
+});
+
+module.exports = app;
