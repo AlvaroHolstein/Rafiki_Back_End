@@ -2,7 +2,7 @@ const { Thread } = require("../models/threads.model");
 
 let crudThread = {
   //Add Thread
-  addThread(user, title, question, tags) {
+  addThread(res, thread) {
     let id = 1;
 
     let threads = [];
@@ -20,14 +20,14 @@ let crudThread = {
       let newThread = Thread({
         id: id,
         userInfo: {
-          userid: user.id,
-          photo: user.photo,
-          name: user.name,
-          rank: user.rank
+          userid: thread.user.id,
+          photo: thread.user.photo,
+          name: thread.user.name,
+          rank: thread.user.rank
         },
-        title: title,
-        question: question,
-        tags: tags,
+        title: thread.title,
+        question: thread.question,
+        tags: thread.tags,
         upvotes: 0,
         date: new Date(),
         views: 0
@@ -35,8 +35,8 @@ let crudThread = {
       newThread.save(function(err) {
         if (err) throw err;
         console.log("Thread Added");
+        res.json(newThread);
       });
-      console.log(threads);
     });
   },
 

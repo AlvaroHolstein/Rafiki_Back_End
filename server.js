@@ -63,17 +63,7 @@ app.get("/findkeyword", (req, res) => {
 
 app.post("/newThread", (req, res) => {
   //Working
-  threadController.addThread(
-    {
-      id: 1,
-      photo: "http://www.coffeebrain.org/wiki/images/9/93/PEOPLE-NoFoto.JPG",
-      name: "admin",
-      rank: "A começar"
-    },
-    "Thread de teste",
-    "<p>Thread de teste</p>",
-    [{ id: 1, text: "Vue.Js" }, { id: 2, text: "Javascript" }]
-  );
+  threadController.addThread(res, req.body.thread);
 });
 
 app.get("/allbadges", (req, res) => {
