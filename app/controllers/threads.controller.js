@@ -10,32 +10,33 @@ let crudThread = {
     Thread.find({}, (err, collection) => {
       if (err) throw err;
       threads = collection;
-    });
-    if (threads.length != 0) {
-      threads.sort(function(a, b) {
-        if (a.id > b.id) return 1;
-        if (a.id < b.id) return -1;
+      if (threads.length != 0) {
+        threads.sort(function(a, b) {
+          if (a.id > b.id) return 1;
+          if (a.id < b.id) return -1;
+        });
+        id = threads[threads.length - 1].id + 1;
+      }
+      let newThread = Thread({
+        id: id,
+        userInfo: {
+          userid: user.id,
+          photo: user.photo,
+          name: user.name,
+          rank: user.rank
+        },
+        title: title,
+        question: question,
+        tags: tags,
+        upvotes: 0,
+        date: new Date(),
+        views: 0
       });
-      id = threads[threads.length - 1].id + 1;
-    }
-    let newThread = Thread({
-      id: id,
-      userInfo: {
-        userid: user.id,
-        photo: user.photo,
-        name: user.name,
-        rank: user.rank
-      },
-      title: title,
-      question: question,
-      tags: tags,
-      upvotes: 0,
-      date: Date.now,
-      views: 0
-    });
-    newThread.save(function(err) {
-      if (err) throw err;
-      console.log("Thread Added");
+      newThread.save(function(err) {
+        if (err) throw err;
+        console.log("Thread Added");
+      });
+      console.log(threads);
     });
   },
 

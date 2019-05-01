@@ -1,10 +1,6 @@
 const { Schema, Model } = require("../../mongo_connect");
 
-<<<<<<< HEAD
-// console.log(Schema, Model)
-=======
 console.log(Schema, Model);
->>>>>>> 1a89a3a9b38c21c03ebcea61867db58b343f7729
 
 const threadSchema = Schema({
   id: {

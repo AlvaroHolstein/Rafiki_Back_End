@@ -23,28 +23,28 @@ let crudTag = {
     Tag.find({}, (err, collection) => {
       if (err) throw err;
       tags = collection;
-    });
-    //check name
-    let exist = tags.find(tag => tag.text == text);
+      //check name
+      let exist = tags.find(tag => tag.text == text);
 
-    if (!exist) {
-      if (tags.length != 0) {
-        tags.sort(function(a, b) {
-          if (a.id > b.id) return 1;
-          if (a.id < b.id) return -1;
+      if (!exist) {
+        if (tags.length != 0) {
+          tags.sort(function(a, b) {
+            if (a.id > b.id) return 1;
+            if (a.id < b.id) return -1;
+          });
+          id = tags[tags.length - 1].id + 1;
+        }
+        let newTag = Tag({
+          id: id,
+          text: text
         });
-        id = tags[tags.length - 1].id + 1;
-      }
-      let newTag = Tag({
-        id: id,
-        text: text
-      });
 
-      newTag.save(function(err) {
-        if (err) throw err;
-        console.log("Tag Added");
-      });
-    }
+        newTag.save(function(err) {
+          if (err) throw err;
+          console.log("Tag Added");
+        });
+      }
+    });
   },
   //Delete Tag
   deleteTag(id) {
