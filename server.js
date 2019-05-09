@@ -36,7 +36,13 @@ app.get("/", (req, res) => {
 app.post("/register", (req, res) => {
   authController.register(req, res);
 });
+app.post("/login", (req, res) => {
+  authController.login(req, res);
+});
 
+app.get("/logout", verifyToken, (req, res) => {
+  authController.logout(req, res);
+});
 /**
  * User paths
  */
