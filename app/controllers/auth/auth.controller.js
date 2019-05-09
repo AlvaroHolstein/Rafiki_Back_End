@@ -36,12 +36,14 @@ let Auth = {
                   .send("There was a problem registering the user.");
               // create a token
               var token = jwt.sign({ id: user._id }, secret, {
-                expiresIn: 86400 // expires in 24 hours
+                expiresIn: 60 * 60 // expires in 1 hour
               });
               res.status(200).send({ auth: true, token: token });
             }
           );
         }
+      } else {
+        res.send("Name Already Exists");
       }
     });
   },
@@ -57,7 +59,7 @@ let Auth = {
       if (!passwordIsValid)
         return res.status(401).send({ auth: false, token: null });
       var token = jwt.sign({ id: user._id }, secret, {
-        expiresIn: 86400 // expires in 24 hours
+        expiresIn: 60 * 60 // expires in 1 hour
       });
       res.status(200).send({ auth: true, token: token });
     });
