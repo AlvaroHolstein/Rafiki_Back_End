@@ -7,6 +7,13 @@ const userController = require("./app/controllers/users.controller");
 const badgeController = require("./app/controllers/badges.controller");
 const threadController = require("./app/controllers/threads.controller");
 
+//Authentication
+var jwt = require("jsonwebtoken");
+var bcrypt = require("bcryptjs");
+const secret = process.env.SECRET;
+const authController = require("./app/controllers/auth/auth.controller");
+const verifyToken = require("./app/controllers/auth/VerifyToken"); //middleware
+
 const app = express();
 
 const port = process.env.PORT || 80;
@@ -25,6 +32,10 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
   res.send("Back End Rafiki");
 });
+//Authentication
+app.post("/register", (req, res) => {
+  authController.register(req, res);
+});
 
 /**
  * User paths
@@ -41,9 +52,9 @@ app.put("/updateuser", (req, res) => {
   // console.log(req.body.user, "/updateUser")
   userController.updateUser(res, req.body.user);
 });
-app.post("/adduser", (req, res) => {
+/* app.post("/adduser", (req, res) => {
   userController.insertUser(res, req.body.user);
-});
+}); */
 /**
  * Thread paths
  */
