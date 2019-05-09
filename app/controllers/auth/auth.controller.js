@@ -36,7 +36,7 @@ let Auth = {
                   .send("There was a problem registering the user.");
               // create a token
               var token = jwt.sign({ id: user._id }, secret, {
-                expiresIn: 60 * 60 // expires in 1 hour
+                expiresIn: "1h" // expires in 1 hour
               });
               res.status(200).send({ auth: true, token: token });
             }
@@ -59,7 +59,7 @@ let Auth = {
       if (!passwordIsValid)
         return res.status(401).send({ auth: false, token: null });
       var token = jwt.sign({ id: user._id }, secret, {
-        expiresIn: 60 * 60 // expires in 1 hour
+        expiresIn: "1h" // expires in 1 hour
       });
       res.status(200).send({ auth: true, token: token });
     });
