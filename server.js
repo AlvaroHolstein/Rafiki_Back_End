@@ -7,10 +7,7 @@ const userController = require("./app/controllers/users.controller");
 const badgeController = require("./app/controllers/badges.controller");
 const threadController = require("./app/controllers/threads.controller");
 
-//Authentication
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
-const secret = process.env.SECRET;
+//Auth
 const authController = require("./app/controllers/auth/auth.controller");
 const verifyToken = require("./app/controllers/auth/VerifyToken"); //middleware
 
@@ -54,7 +51,7 @@ app.get("/allusers", (req, res) => {
 app.get("/userByName", (req, res) => {
   userController.findOneByName(res, req.body.name);
 });
-app.put("/updateuser", (req, res) => {
+app.put("/updateuser", verifyToken, (req, res) => {
   // console.log(req.body.user, "/updateUser")
   userController.updateUser(res, req.body.user);
 });
@@ -78,7 +75,7 @@ app.get("/findkeyword", (req, res) => {
   threadController.findByKeyword(res, "TESTE");
 });
 
-app.post("/newThread", (req, res) => {
+app.post("/newThread", verifyToken, (req, res) => {
   //Working
   threadController.addThread(res, req.body.thread);
 });
