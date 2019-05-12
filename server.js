@@ -66,7 +66,7 @@ app.get("/userByName", (req, res) => {
 });
 app.put("/updateuser", verifyToken, (req, res) => {
   console.log(req.body.user, "/updateUser")
-  res.send(req.userId)
+  res.send(req.userId, 'req.userid')
   // userController.updateUser(res, req.body.user);
 });
 /* app.post("/adduser", (req, res) => {
