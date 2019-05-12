@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const cors = require("cors");
+const morgan = require('morgan')
 require("dotenv").config();
 const userController = require("./app/controllers/users.controller");
 const badgeController = require("./app/controllers/badges.controller");
@@ -13,14 +14,26 @@ const verifyToken = require("./app/controllers/auth/VerifyToken"); //middleware
 
 const app = express();
 
-const port = process.env.PORT || 80;
 
+
+app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" ":req[header]" ":res[header]"'))
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(session({
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    secure: true
+  }
+}))
 app.use((req, res, next) => {
-  // console.log(req.body)
+  console.log(req.headers, 'headers')
   next();
+}, (req, res, next) => {
+  console.log(req.session, 'mid2')
+  next()
 });
 /**
  * Fazer rotas
@@ -52,8 +65,9 @@ app.get("/userByName", (req, res) => {
   userController.findOneByName(res, req.body.name);
 });
 app.put("/updateuser", verifyToken, (req, res) => {
-  // console.log(req.body.user, "/updateUser")
-  userController.updateUser(res, req.body.user);
+  console.log(req.body.user, "/updateUser")
+  res.send(req.userId)
+  // userController.updateUser(res, req.body.user);
 });
 /* app.post("/adduser", (req, res) => {
   userController.insertUser(res, req.body.user);
@@ -90,8 +104,6 @@ app.get("/allTags", (req, res) => {
   tagController.findAll(res);
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port :${port}`);
-});
+
 
 module.exports = app;

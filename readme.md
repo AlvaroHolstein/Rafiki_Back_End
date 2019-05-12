@@ -13,6 +13,7 @@ To run the server ``` npm start ```
 * User que criou a Thread pode fechar-la [ ]
 * Corrigir Upvotes [ ]
 * Alterar a maneira de guardar imagens. [ ]
+[ ] Criar uma whitelist de tokens
 
 ## Back-End
 

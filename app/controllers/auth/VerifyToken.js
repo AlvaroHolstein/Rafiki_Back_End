@@ -5,6 +5,9 @@ function verifyToken(req, res, next) {
   if (!token)
     return res.status(403).send({ auth: false, message: "No token provided." });
   jwt.verify(token, secret, function(err, decoded) {
+    console.log(process.env.SECRET, 'token')
+    console.log(err)
+
     if (err)
       return res
         .status(500)
@@ -17,3 +20,4 @@ function verifyToken(req, res, next) {
   });
 }
 module.exports = verifyToken;
+  
