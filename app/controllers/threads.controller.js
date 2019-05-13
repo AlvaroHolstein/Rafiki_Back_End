@@ -51,6 +51,13 @@ let crudThread = {
     });
   },
 
+  //Get Single Thread
+  findByID(res, id) {
+    Thread.findById(id, (err, collection) => {
+      if (err) console.log(err);
+      res.json(collection);
+    });
+  },
   //Get Thread By Tags
   findByTag(res, tags) {
     //tags is an array of String
