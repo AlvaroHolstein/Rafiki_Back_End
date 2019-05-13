@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const cors = require("cors");
-const morgan = require('morgan')
+const morgan = require("morgan");
 require("dotenv").config();
 const userController = require("./app/controllers/users.controller");
 const badgeController = require("./app/controllers/badges.controller");
