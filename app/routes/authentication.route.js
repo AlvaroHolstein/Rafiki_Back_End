@@ -1,5 +1,7 @@
 const router = require('express').Router()
+const authController = require('../controllers/auth/auth.controller')
 const verifyToken = require('../controllers/auth/VerifyToken')
+
 router.get('/', function (req, res) {
     console.log(req);
     res.send('<h1>Routa para "chamadas" de autenticação</h1>')

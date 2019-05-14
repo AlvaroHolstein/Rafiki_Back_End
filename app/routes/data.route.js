@@ -1,5 +1,10 @@
 const router = require('express').Router()
 
+const userController = require("../controllers/users.controller");
+const badgeController = require("../controllers/badges.controller");
+const threadController = require("../controllers/threads.controller");
+
+const verifyToken = require('../controllers/auth/VerifyToken')
 router.get('/', function (req, res) {
     console.log(req)
     res.send('Route para as chamadas à base de dados.')
@@ -7,15 +12,19 @@ router.get('/', function (req, res) {
 /**
  * User paths
  */
-router.get("/allusers", (req, res) => {
+router.get("/users", (req, res) => {
     //Função criada no controller
     userController.findAll(res);
 });
+router.get("/users/:id", (req, res) => {
+    //Função criada no controller
+    userController.findByID(res, req.params.id);
+});
 
-router.get("/userByName", (req, res) => {
+router.get("/users/userByName", (req, res) => {
     userController.findOneByName(res, req.body.name);
 });
-router.put("/updateuser", (req, res) => {
+router.put("/users/updateuser", verifyToken, (req, res) => {
     console.log(req.body.user, "/updateUser")
     res.send(req.userId, 'req.userid')
     // userController.updateUser(res, req.body.user);
@@ -26,33 +35,38 @@ router.put("/updateuser", (req, res) => {
 /**
  * Thread paths
  */
-router.get("/allthreads", (req, res) => {
+router.get("/threads", (req, res) => {
     //Working
     threadController.findAll(res);
 });
+router.get("/threads/:id", (req, res) => {
+    //Working
+    threadController.findByID(res, req.params.id);
+});
 
-router.get("/findTag", (req, res) => {
+
+router.get("/threads/findTag", (req, res) => {
     //Working
     threadController.findByTag(res, ["Vue.js", "JAVASCRIPT"]);
 });
 
-router.get("/findkeyword", (req, res) => {
+router.get("/threads/findkeyword", (req, res) => {
     //Working
     threadController.findByKeyword(res, "TESTE");
 });
 
-router.post("/newThread", (req, res) => {
+router.post("/threads", verifyToken, (req, res) => {
     //Working
     threadController.addThread(res, req.body.thread);
 });
 
 //badges.controller
-router.get("/allbadges", (req, res) => {
+router.get("/badges", (req, res) => {
     badgeController.findAll(res);
 });
 
 //Tag.controller
-router.get("/allTags", (req, res) => {
+router.get("/tags", (req, res) => {
     tagController.findAll(res);
 });
 
