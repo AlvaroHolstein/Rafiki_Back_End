@@ -5,6 +5,9 @@ const cors = require("cors");
 const morgan = require("morgan");
 require("dotenv").config();
 
+
+const cookieParser = require('cookie-parser')
+const url = require('url')
 const dataRoute = require('./app/routes/data.route')
 const authenticationRoute = require('./app/routes/authentication.route')
 
@@ -16,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // app.set('trust proxy', '1'); Ques esto ???????? 
-
+// app.use(cookieParser())
 app.use(session({
   secret: process.env.SECRET,
   resave: false,
@@ -30,14 +33,33 @@ app.use((req, res, next) => {
   console.log(req.headers, 'headers')
   next();
 }, (req, res, next) => {
-  console.log(req.session, 'mid2')
+  console.log(req.session, 'Params')
+  
+  let query = url.parse(req.url).query
+  console.log(query)
   next()
-});
+},
+  (req, res, next) => {
+    console.log(req.cookie, 'cookies')
+    next()
+  });
 
 app.get("/", (req, res) => {
   res.send("Back End Rafiki");
 });
 
+app.get('/teste', function (req, res) {
+  res.json({ msg: 'get!' })
+})
+
+app.post('/teste', function (req, res) {
+
+  const query = url.parse(req.url).query
+  const body = req.body
+
+  console.log(body)
+  res.json({ msg: 'post!' })
+})
 /**
  * Route para as chamadas de autenticação
  */

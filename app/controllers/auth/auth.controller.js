@@ -52,7 +52,7 @@ let Auth = {
   },
   //login
   login(req, res) {
-    console.log(req.body)
+    console.log(req.body, 'req.body no login')
     User.findOne({ email: req.body.email }, function (err, user) {
       if (err) return res.status(500).send("Error on the server.");
       if (!user) return res.status(404).send("No user found.");
@@ -65,7 +65,8 @@ let Auth = {
       var token = jwt.sign({ id: user._id }, secret, {
         expiresIn: "1h" // expires in 1 hour
       });
-      res.status(200).send({ auth: true, token: token });
+      res.cookie('se_la_cookie', 'lelele', {maxAge: 90000, httpOnly: false, secure: false})
+      res.status(200).send({ auth: true, token: token, id: user.id });
     });
   },
   //logout
