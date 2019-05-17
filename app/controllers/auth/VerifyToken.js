@@ -7,7 +7,7 @@ function verifyToken(req, res, next) {
   jwt.verify(token, secret, function(err, decoded) {
     console.log(process.env.SECRET, 'token')
     console.log(err)
-
+    // console.log(decoded, 'decoded')
     if (err)
       return res
         .status(500)

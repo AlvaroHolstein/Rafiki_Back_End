@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser')
 const url = require('url')
 const dataRoute = require('./app/routes/data.route')
 const authenticationRoute = require('./app/routes/authentication.route')
+const verify = require('./app/controllers/auth/VerifyToken')
 
 const app = express();
 
@@ -34,7 +35,7 @@ app.use((req, res, next) => {
   next();
 }, (req, res, next) => {
   console.log(req.session, 'Params')
-  
+
   let query = url.parse(req.url).query
   console.log(query)
   next()
@@ -52,7 +53,7 @@ app.get('/teste', function (req, res) {
   res.json({ msg: 'get!' })
 })
 
-app.post('/teste', function (req, res) {
+app.post('/teste', verify, function (req, res) {
 
   const query = url.parse(req.url).query
   const body = req.body
