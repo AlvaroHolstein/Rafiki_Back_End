@@ -2,7 +2,7 @@ const { Comment } = require("../models/comments.model");
 
 let crudComment = {
   //Add Comment
-  addComment(idAnswer, idUser, comment) {
+  addComment(res, idAnswer, comment) {
     let id = 1;
 
     let comments = [];
@@ -22,8 +22,13 @@ let crudComment = {
       let newComment = Answer({
         id: id,
         idAnswer: idAnswer,
-        idUser: idUser,
-        comment: comment
+        userInfo: {
+          userid: comment.user.id,
+          photo: comment.user.photo,
+          name: comment.user.name,
+          rank: comment.user.rank
+        },
+        comment: comment.comment
       });
 
       newComment.save(function(err) {

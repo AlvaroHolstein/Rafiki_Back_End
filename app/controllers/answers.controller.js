@@ -2,7 +2,7 @@ const { Answer } = require("../models/answers.model");
 
 let crudAnswer = {
   //Add Answer
-  addAnswer(idThread, idUser, answer) {
+  addAnswer(res, idThread, answer) {
     let id = 1;
 
     let answers = [];
@@ -22,8 +22,13 @@ let crudAnswer = {
       let newAnswer = Answer({
         id: id,
         idThread: idThread,
-        idUser: idUser,
-        answer: answer
+        userInfo: {
+          userid: answer.user.id,
+          photo: answer.user.photo,
+          name: answer.user.name,
+          rank: answer.user.rank
+        },
+        answer: answer.answer
       });
 
       newAnswer.save(function(err) {
