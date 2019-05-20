@@ -1,33 +1,32 @@
-const app = require('./server');
+const app = require("./server");
 const port = process.env.PORT || 80;
-const porthttps = process.env.PORTHTTPS || 81
-const http = require('http')
-const https = require('https')
-const { conn } = require('./mongo_connect')
-const { User, userSchema } = require('./app/models/users.model')
-const request = require('request')
+const porthttps = process.env.PORTHTTPS || 81;
+const http = require("http");
+const https = require("https");
+const { conn } = require("./mongo_connect");
+const { User, userSchema } = require("./app/models/users.model");
+const request = require("request");
 // const options = {}, serve se tivermos uma ligação (https)
 
-const ports = ['192.168.1.83', '172.23.116.246', '127.0.0.1']
+const ports = ["192.168.1.83", "172.23.116.246", "127.0.0.1", "192.168.1.74"];
 function getAdress() {
-
-    for (let i = 0; i < ports.length; i++) {
-        console.log(ports[i])
-        request(`http://${ports[i]}`, (err, response, body) => {
-            if (err) {
-                if (err.errno == 'ETIMEDOUT') return ports[i]
-                // console.log(err, 'err')
-            }
-            if (response) console.log(response, 'response')
-            if (body) console.log(body, 'body')
-        })
-    }
+  for (let i = 0; i < ports.length; i++) {
+    console.log(ports[i]);
+    request(`http://${ports[i]}`, (err, response, body) => {
+      if (err) {
+        if (err.errno == "ETIMEDOUT") return ports[i];
+        // console.log(err, 'err')
+      }
+      if (response) console.log(response, "response");
+      if (body) console.log(body, "body");
+    });
+  }
 }
 // const serverHttps = https.createServer(options, app)
 
-const serverHttp = http.createServer(app)
+const serverHttp = http.createServer(app);
 serverHttp.listen(port, getAdress(), () => {
-    console.log(`Server http running on port :${port}`);
+  console.log(`Server http running on port :${port}`);
 });
 
 // serverHttps.listen()

@@ -6,6 +6,8 @@ const threadController = require("../controllers/threads.controller");
 const answerController = require("../controllers/answers.controller");
 const commentController = require("../controllers/comments.controller");
 
+const statisticController = require("../controllers/statistics.controller");
+
 const verifyToken = require("../controllers/auth/VerifyToken");
 router.get("/", function(req, res) {
   console.log(req);
@@ -87,5 +89,27 @@ router.get("/badges", (req, res) => {
 router.get("/tags", (req, res) => {
   tagController.findAll(res);
 });
+
+//Rotas para estatisticas
+
+//GetAvgUpvotes
+
+//GetUserUpvotes
+
+//GetAvgNumberOfThreads
+router.get("/avgThreads", (req, res) => {
+  statisticController.GetAvgNumberOfThreads(res);
+});
+//GetUserNumberOfThreads
+
+//GetAvgLevel
+router.get("/avgLevel", (req, res) => {
+  statisticController.GetAvgLevel(res);
+});
+//GetUserLevel
+
+//GetAvgNumberOfComments (comments+answers)
+
+//GetUserNumberOfComments
 
 module.exports = router;
