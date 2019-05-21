@@ -19,7 +19,7 @@ let crudUser = {
   },
   findOneByName(res, name) {
     //Encontrar o user e devolve-lo
-    User.find({ name: name }, (err, collection) => {
+    User.find({ name: { $regex: name, $options: "i" } }, (err, collection) => {
       if (err) {
         console.log(err, "erro no findOneByName()");
       } else {
