@@ -76,7 +76,7 @@ let stats = {
   //GetUserLevel
   GetUserLevel(res, id) {
     User.findById(id, (err, collection) => {
-      res, json(collection.experience / 100);
+      res.json(collection.experience / 100);
     });
   },
   //GetAvgNumberOfComments (comments+answers)
