@@ -11,6 +11,21 @@ let crudUser = {
       }
     });
   },
+  findByRank(res) {
+    User.find({}, (err, collection) => {
+      if (err) {
+        console.log(err, "erro");
+      } else {
+        let users = collection.sort((a, b) => {
+          if (a.exp > b.exp) return -1;
+          if (a.exp < b.exp) return 1;
+          else return 0;
+        });
+        // console.log(collection, "collection");
+        res.json(users);
+      }
+    });
+  },
   findByID(res, id) {
     User.findById(id, (err, collection) => {
       if (err) console.log(err);
