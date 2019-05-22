@@ -12,16 +12,18 @@ let crudUser = {
     });
   },
   findByRank(res) {
+    console.log('alalaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+    let users = []
     User.find({}, (err, collection) => {
       if (err) {
-        console.log(err, "erro");
+        console.log(err, "ERRO");
       } else {
-        let users = collection.sort((a, b) => {
+        users = collection.sort((a, b) => {
           if (a.exp > b.exp) return -1;
           if (a.exp < b.exp) return 1;
           else return 0;
         });
-        // console.log(collection, "collection");
+        console.log(collection, "collection");
         res.json(users);
       }
     });
