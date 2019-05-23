@@ -1,6 +1,7 @@
 const { Thread } = require("../models/threads.model");
 const moment = require("moment")
-
+// const queryString = require("querystring")
+const url = require('url')
 
 /**
  * Devolver sempre as threads ordenadas
@@ -70,14 +71,25 @@ let crudThread = {
   },
 
   //Get all Threads
-  findAll(res) {
+  findAll(req, res) {
+    let qty = url.parse(req.url, true).query.qty
+    console.log(qty, "QUANTIDADE")
+
     Thread.find({}, (err, collection) => {
       if (err) {
         console.log(err, "Error");
       } else {
         let ordered = orderByDate(collection)
         console.log(ordered, "Ordered")
-        res.json(ordered);
+
+        if(qty != undefined) {
+          let aux = []
+          for(let i = 0; i< qty; i++){
+            if(ordered[i] != undefined) aux.push(ordered[i])
+          }
+          res.json(aux)
+        }
+        else res.json(ordered);
       }
     });
   },

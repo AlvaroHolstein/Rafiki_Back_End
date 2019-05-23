@@ -49,7 +49,7 @@ router.put("/users/updateuser", verifyToken, (req, res) => {
  */
 router.get("/threads", (req, res) => {
   //Working
-  threadController.findAll(res);
+  threadController.findAll(req, res);
 });
 router.get("/threads/findTag", (req, res) => {
   //Working
