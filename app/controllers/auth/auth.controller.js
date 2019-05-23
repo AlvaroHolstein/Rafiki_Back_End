@@ -2,6 +2,7 @@ const { User } = require("../../models/users.model");
 const secret = process.env.SECRET;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
+var nodemailer = require("nodemailer");
 let Auth = {
   //Register
   register(req, res) {
@@ -98,34 +99,51 @@ let Auth = {
 
         var token = jwt.sign(payload, secret);
 
-        // TODO: Send email containing link to reset password.
-        // In our case, will just return a link to click.
-        res.send(
-          '<a href="/auth-api/resetpassword/' +
-            user.id +
-            "/" +
-            token +
-            '">Reset password</a>'
-        );
+        var transporter = nodemailer.createTransport({
+          service: "Gmail",
+          auth: {
+            user: "rafikiteam18.19@gmail.com", //Mail
+            pass: "Rafiki1234!" //Password
+          }
+        });
+        var html =
+          "<p>Hello " +
+          user.name +
+          "</p>" +
+          '<p><a href="http://127.0.0.1:420/auth-api/resetpassword/' +
+          user.id +
+          "/" +
+          token +
+          '">Reset password</a></p>';
+
+        var options = {
+          from: "j.henrique.campos.99@gmail.com",
+          to: user.email,
+          subject: "Password Recovery",
+          html: html
+        };
+
+        transporter.sendMail(options, function(err, info) {
+          if (err) {
+            console.log(err);
+            res.json({ yo: "error" });
+          } else {
+            console.log("Message sent" + info.response);
+            res.json({ yo: info.response });
+          }
+        });
+        res.send("<p>Mail Sent</p>");
       });
     } else {
       res.send("Email address is missing.");
     }
   },
   resetpassword(req, res) {
-    // TODO: Fetch user from database using
-    // req.params.id
-    // TODO: Decrypt one-time-use token using the user's
-    // current password hash from the database and combine it
-    // with the user's created date to make a very unique secret key!
-    // For example,
-    // var secret = user.password + ‘-' + user.created.getTime();
     User.find({ id: req.params.id }, (err, user) => {
       if (err) throw err;
       var secret = process.env.SECRET + user.password;
       var payload = jwt.decode(req.params.token, secret);
-      // TODO: Gracefully handle decoding issues.
-      // Create form to reset password.
+
       res.send(
         '<form action="/auth-api/resetpassword" method="POST">' +
           '<input type="hidden" name="id" value="' +
@@ -142,13 +160,7 @@ let Auth = {
   },
   changepassword(req, res) {
     console.log(req.body);
-    // TODO: Fetch user from database using
-    // req.body.id
-    // TODO: Decrypt one-time-use token using the user's
-    // current password hash from the database and combining it
-    // with the user's created date to make a very unique secret key!
-    // For example,
-    // var secret = user.password + ‘-' + user.created.getTime();
+
     User.find({ id: req.body.id }, (err, user) => {
       if (err) throw err;
       var secret = process.env.SECRET + user.password;
@@ -156,9 +168,6 @@ let Auth = {
       var payload = jwt.decode(req.body.token, secret);
       console.log(payload);
 
-      // TODO: Gracefully handle decoding issues.
-      // TODO: Hash password from
-      // req.body.password
       var hashedPassword = bcrypt.hashSync(req.body.password, 8);
       User.findOneAndUpdate(
         { id: req.body.id },
