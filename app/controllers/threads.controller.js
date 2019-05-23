@@ -1,4 +1,33 @@
 const { Thread } = require("../models/threads.model");
+const moment = require("moment")
+
+
+/**
+ * Devolver sempre as threads ordenadas
+ * da mais recente para a mais antiga
+ */
+function orderByDate(arr) {
+  // [year, month, day, hour, minute, second, millisecond]
+
+  // console.log(moment([2019, 1, 10]).unix(), 'MAIOR')
+  // console.log(moment([2019, 1, 1]).unix(), "MENOR")
+
+  if (arr.length > 1) {
+    return arr.sort((a, b) => {
+      /** Data transformada para milisegundos para comparar */
+      let timeA = moment(a.date).unix()
+      let timeB = moment(b.date).unix()
+
+      console.log(timeA, "TIME _ A")
+      console.log(timeB, "TIME _ B")
+
+      if (timeA < timeB) return 1;
+      if (timeA > timeB) return -1;
+    })
+  }
+  else return arr;
+}
+
 
 let crudThread = {
   //Add Thread
@@ -11,7 +40,7 @@ let crudThread = {
       if (err) throw err;
       threads = collection;
       if (threads.length != 0) {
-        threads.sort(function(a, b) {
+        threads.sort(function (a, b) {
           if (a.id > b.id) return 1;
           if (a.id < b.id) return -1;
         });
@@ -32,7 +61,7 @@ let crudThread = {
         date: new Date(),
         views: 0
       });
-      newThread.save(function(err) {
+      newThread.save(function (err) {
         if (err) throw err;
         console.log("Thread Added");
         res.json(newThread);
@@ -46,7 +75,9 @@ let crudThread = {
       if (err) {
         console.log(err, "Error");
       } else {
-        res.json(collection);
+        let ordered = orderByDate(collection)
+        console.log(ordered, "Ordered")
+        res.json(ordered);
       }
     });
   },
@@ -78,7 +109,8 @@ let crudThread = {
           });
         }
         console.log(threads);
-        res.json(threads);
+        let ordered = orderByDate(threads)
+        res.json(ordered);
       }
     });
   },
@@ -94,7 +126,7 @@ let crudThread = {
       },
       (err, collection) => {
         if (err) throw err;
-
+        let ordered = orderByDate(collection)
         res.json(collection);
       }
     );
@@ -102,7 +134,7 @@ let crudThread = {
 
   //Mudar Informação do user
   updateUserInfo(user) {
-    Thread.findByIdAndUpdate(user.userid, { userInfo: user }, function(
+    Thread.findByIdAndUpdate(user.userid, { userInfo: user }, function (
       err,
       thread
     ) {
@@ -113,7 +145,7 @@ let crudThread = {
 
   //Close Thread
   closeDate(id) {
-    Thread.findByIdAndUpdate(id, { closeDate: Date.now }, function(
+    Thread.findByIdAndUpdate(id, { closeDate: Date.now }, function (
       err,
       thread
     ) {
@@ -123,14 +155,14 @@ let crudThread = {
   },
   //Add View
   addView(id) {
-    Thread.findByIdAndUpdate(id, { $inc: { views: 1 } }, function(err, thread) {
+    Thread.findByIdAndUpdate(id, { $inc: { views: 1 } }, function (err, thread) {
       if (err) throw err;
       console.log(thread);
     });
   },
   //Add Upvote
   addUpvote(id) {
-    Thread.findByIdAndUpdate(id, { $inc: { upvotes: 1 } }, function(
+    Thread.findByIdAndUpdate(id, { $inc: { upvotes: 1 } }, function (
       err,
       thread
     ) {
@@ -140,7 +172,7 @@ let crudThread = {
   },
   //Remove Upvote
   removeUpvote(id) {
-    Thread.findByIdAndUpdate(id, { $inc: { upvotes: -1 } }, function(
+    Thread.findByIdAndUpdate(id, { $inc: { upvotes: -1 } }, function (
       err,
       thread
     ) {
@@ -150,7 +182,7 @@ let crudThread = {
   },
   //Delete Thread
   deleteThread(id) {
-    Thread.findByIdAndRemove(id, function(err) {
+    Thread.findByIdAndRemove(id, function (err) {
       if (err) throw err;
       console.log("Thread Deleted");
     });

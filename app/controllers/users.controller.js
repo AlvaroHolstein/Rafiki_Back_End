@@ -12,15 +12,14 @@ let crudUser = {
     });
   },
   findByRank(res) {
-    console.log('alalaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
     let users = []
     User.find({}, (err, collection) => {
       if (err) {
         console.log(err, "ERRO");
       } else {
         users = collection.sort((a, b) => {
-          if (a.exp > b.exp) return -1;
-          if (a.exp < b.exp) return 1;
+          if (a.experience > b.experience) return -1;
+          if (a.experience < b.experience) return 1;
           else return 0;
         });
         console.log(collection, "collection");
