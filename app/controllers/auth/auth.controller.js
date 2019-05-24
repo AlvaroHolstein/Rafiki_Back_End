@@ -1,5 +1,6 @@
 const { User } = require("../../models/users.model");
 const secret = process.env.SECRET;
+var cookieParser = require("cookie-parser");
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 var nodemailer = require("nodemailer");
@@ -72,16 +73,17 @@ let Auth = {
       var token = jwt.sign({ id: user._id }, secret, {
         expiresIn: "1h" // expires in 1 hour
       });
-      res.cookie("se_la_cookie", "lelele", {
-        maxAge: 90000,
-        httpOnly: false,
-        secure: false
-      });
-      res.status(200).send({ auth: true, token: token, id: user.id });
+      res.cookie("login", token, { maxAge: 9999 });
+      res
+        .status(200)
+        .send({ auth: true, token: token, id: user.id, cookie: "login" });
+
+      //res.send("Cookie??");
     });
   },
   //logout
   logout(req, res) {
+    res.clearCookie("login");
     res.status(200).send({ auth: false, token: null });
   },
   passwordreset(req, res) {
