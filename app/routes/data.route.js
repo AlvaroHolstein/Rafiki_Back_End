@@ -55,7 +55,6 @@ router.get("/threads/findTag", (req, res) => {
   //Working
   threadController.findByTag(res, ["Vue.js", "JAVASCRIPT"]);
 });
-
 router.get("/threads/findkeyword", (req, res) => {
   //Working
   threadController.findByKeyword(res, "TESTE");
@@ -79,8 +78,14 @@ router.get("/threads/:id/answers/:idAnswer/comments", (req, res) => {
 router.post("/threads", verifyToken, (req, res) => {
   //Working
   threadController.addThread(res, req.body.thread);
-}); //Add Thread
+});
 
+router.post("/threads/findAndExclude", (req, res) => {
+  // 
+  threadController.findAndExclude(req, res)
+})
+
+//Add Thread
 router.post("/threads/:id/answers", (req, res) => {
   answerController.addAnswer(res, req.params.id, req.body.answer);
 }); //Add Answer

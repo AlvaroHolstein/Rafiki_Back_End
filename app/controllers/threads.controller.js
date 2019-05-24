@@ -82,10 +82,10 @@ let crudThread = {
         let ordered = orderByDate(collection)
         console.log(ordered, "Ordered")
 
-        if(qty != undefined) {
+        if (qty != undefined) {
           let aux = []
-          for(let i = 0; i< qty; i++){
-            if(ordered[i] != undefined) aux.push(ordered[i])
+          for (let i = 0; i < qty; i++) {
+            if (ordered[i] != undefined) aux.push(ordered[i])
           }
           res.json(aux)
         }
@@ -93,7 +93,27 @@ let crudThread = {
       }
     });
   },
-
+  //Get some Threads and excluding others
+  findAndExclude(req, res) {
+    console.log(req.body, 'Body no FIND AND EXCLUDE')
+    Thread.find({ id: { $not: { $in: req.body.exclude } } }, (err, collection) => {
+      if (err) console.log(err, "errr")
+      else {
+        let ordered = orderByDate(collection)
+        if (req.body.qty != undefined) {
+          console.log("Quantidade 'selecionada' FIND AND EXCLUDE")
+          res.json(ordered.filter((thread, cont) => {
+            if (cont + 1 <= req.body.qty) {
+              return true;
+            }
+          }))
+        }else {
+          console.log(`Envio de ${ordered.length} threads FIND AND EXCLUDE`)
+          res.json(ordered)
+        }
+      }
+    })
+  },
   //Get Single Thread
   findByID(res, id) {
     Thread.findById(id, (err, collection) => {
