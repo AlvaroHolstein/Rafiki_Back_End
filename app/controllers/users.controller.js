@@ -28,9 +28,9 @@ let crudUser = {
     });
   },
   findByID(res, id) {
-    User.findById(id, (err, collection) => {
+    User.find({id: id}, (err, collection) => {
       if (err) console.log(err);
-      res.json(collection);
+      res.json(collection[0]);
     });
   },
   findOneByName(res, name) {
