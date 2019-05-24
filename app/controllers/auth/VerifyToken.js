@@ -1,12 +1,15 @@
 var jwt = require("jsonwebtoken");
+var cookieParser = require("cookie-parser");
 const secret = process.env.SECRET;
 function verifyToken(req, res, next) {
-  var token = req.headers["x-access-token"];
+  console.log("Cookie:", JSON.stringify(req.cookies["login"]));
+  var token = req.cookies["login"];
+  console.log("token:", token);
   if (!token)
     return res.status(403).send({ auth: false, message: "No token provided." });
   jwt.verify(token, secret, function(err, decoded) {
-    console.log(process.env.SECRET, 'token')
-    console.log(err)
+    console.log(process.env.SECRET, "token");
+    console.log(err);
     // console.log(decoded, 'decoded')
     if (err)
       return res
@@ -20,4 +23,3 @@ function verifyToken(req, res, next) {
   });
 }
 module.exports = verifyToken;
-  
