@@ -14,7 +14,10 @@ function getAdress() {
     console.log(ports[i]);
     request(`http://${ports[i]}`, (err, response, body) => {
       if (err) {
-        if (err.errno == "ETIMEDOUT") return ports[i];
+        // if (err.errno == "ETIMEDOUT") {
+        //   console.log("Ficou no " + ports[i])
+        //   return ports[i]
+        // }
         // console.log(err, 'err')
       }
       if (response) console.log(response, "response");
