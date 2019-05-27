@@ -48,7 +48,15 @@ let Auth = {
                 var token = jwt.sign({ id: user._id }, secret, {
                   expiresIn: "1h" // expires in 1 hour
                 });
-                res.status(200).send({ auth: true, token: token });
+                res.cookie("login", token, { maxAge: 9999 });
+                res
+                  .status(200)
+                  .send({
+                    auth: true,
+                    token: token,
+                    id: user.id,
+                    cookie: "login"
+                  });
               }
             );
           } else res.send("Password Inválida");
