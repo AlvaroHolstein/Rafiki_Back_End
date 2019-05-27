@@ -37,10 +37,18 @@ let crudComment = {
       });
     });
   },
-
+  findUserComments(res, id) {
+    Comment.find({"userInfo.userid": id}, (err, collection) => {
+      if(err) console.log(err, "Erro no findUserComments")
+      res.json(collection)
+    })
+  },
   //Get Comment By Answer ID
   findComments(res, id) {
-    Comment.find({ idAnswer: id }, function(err, collection) {
+    /**
+     * O id também vai ser um array
+     */
+    Comment.find({ idAnswer: {$in: id} }, function(err, collection) {
       if (err) throw err;
       res.json(collection);
     });

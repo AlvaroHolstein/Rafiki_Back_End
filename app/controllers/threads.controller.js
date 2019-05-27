@@ -116,10 +116,16 @@ let crudThread = {
   },
   //Get Single Thread
   findByID(res, id) {
-    Thread.findById(id, (err, collection) => {
+    Thread.find({id: id}, (err, collection) => {
       if (err) console.log(err);
-      res.json(collection);
+      res.json(collection[0]);
     });
+  },
+  findByUserId(res, id) {
+    Thread.find({"userInfo.userid": id}, (err, collection) => {
+      if(err) console.log(err)
+      res.json(collection)
+    })
   },
   //Get Thread By Tags
   findByTag(res, tags) {

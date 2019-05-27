@@ -59,6 +59,11 @@ router.get("/threads/findkeyword", (req, res) => {
   //Working
   threadController.findByKeyword(res, "TESTE");
 });
+//Get all threads from a user
+router.get("/threads/userThreads/:id", (req, res) => {
+  //Working
+  threadController.findByUserId(res, req.params.id)
+})
 
 //Get Threads
 router.get("/threads/:id", (req, res) => {
@@ -95,6 +100,14 @@ router.post("/threads/:id/answers/:idAnswer/comments", (req, res) => {
 }); //Add Comment
 
 
+//Encontrar todas as answers de um user
+router.get("/userAnswers/:id", (req, res) => {
+  answerController.findByUserId(res, req.params.id);
+})
+//Encontrar todos os comments de um user
+router.get("/userComments/:id", (req, res) => {
+  commentController.findUserComments(res, req.params.id);
+})
 //badges.controller
 router.get("/badges", (req, res) => {
   badgeController.findAll(res);

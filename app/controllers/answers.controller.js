@@ -12,7 +12,7 @@ let crudAnswer = {
       answers = collection;
 
       if (answers.length != 0) {
-        answers.sort(function(a, b) {
+        answers.sort(function (a, b) {
           if (a.id > b.id) return 1;
           if (a.id < b.id) return -1;
         });
@@ -31,7 +31,7 @@ let crudAnswer = {
         answer: answer.answer
       });
 
-      newAnswer.save(function(err) {
+      newAnswer.save(function (err) {
         if (err) throw err;
         console.log("Answer Added");
       });
@@ -40,15 +40,29 @@ let crudAnswer = {
 
   //Get Answers By Thread Id
   findAnswers(res, id) {
-    Answer.find({ idThread: id }, function(err, collection) {
+    /**
+     * Este id vai ser um array para poder encontrar logo todas as answers 
+     * que queremos, em vez de ir buscar todas, 
+     * vai acontecer o mesmo para os comments.
+     * UPDATE: 
+     * Não vai poder ser um array por causa da maneira como
+     * o caminho (threads/:id/answers), e assim já devolve
+     * todas ans
+     */
+    Answer.find({ idThread: id }, function (err, collection) {
       if (err) throw err;
       res.json(collection);
     });
   },
-
+  findByUserId(res, id) {
+    Answer.find({ "userInfo.userid": id }, (err, collection) => {
+      if (err) console.log(err, "Erro no findByUserId")
+      res.json(collection)
+    })
+  },
   //Add Upvote
   answerUpvote(id) {
-    Answer.findByIdAndUpdate(id, { $inc: { upvotes: 1 } }, function(
+    Answer.findByIdAndUpdate(id, { $inc: { upvotes: 1 } }, function (
       err,
       answer
     ) {
@@ -59,7 +73,7 @@ let crudAnswer = {
 
   //Remove Upvote
   answerDownvote(id) {
-    Answer.findByIdAndUpdate(id, { $inc: { upvotes: -1 } }, function(
+    Answer.findByIdAndUpdate(id, { $inc: { upvotes: -1 } }, function (
       err,
       answer
     ) {
