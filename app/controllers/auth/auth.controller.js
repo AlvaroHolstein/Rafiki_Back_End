@@ -13,7 +13,7 @@ let Auth = {
     User.find({}, (err, collection) => {
       if (err) throw err;
       if (collection.length != 0) {
-        collection.sort(function(a, b) {
+        collection.sort(function (a, b) {
           if (a.id > b.id) return 1;
           if (a.id < b.id) return -1;
         });
@@ -39,7 +39,7 @@ let Auth = {
                 email: req.body.email,
                 password: hashedPassword
               },
-              function(err, user) {
+              function (err, user) {
                 if (err)
                   return res
                     .status(500)
@@ -69,22 +69,42 @@ let Auth = {
   //login
   login(req, res) {
     console.log(req.body, "req.body no login");
-    User.findOne({ email: req.body.email }, function(err, user) {
+    //Encontrar o User
+    User.findOne({ email: req.body.email }, function (err, user) {
       if (err) return res.status(500).send("Error on the server.");
       if (!user) return res.status(404).send("No user found.");
+
+      //Comparar Passwords
       var passwordIsValid = bcrypt.compareSync(
         req.body.password,
         user.password
       );
-      if (!passwordIsValid)
+      if (!passwordIsValid) {
+        //Caso a password não seja válida
         return res.status(401).send({ auth: false, token: null });
+      }
+
+      // Caso a password seja válida
       var token = jwt.sign({ id: user._id }, secret, {
         expiresIn: "1h" // expires in 1 hour
       });
+      let sendUser = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        description: user.description,
+        notifications: user.notifications,
+        experience: user.experience,
+        picture: user.picture,
+        follow: user.follow,
+        course: user.course,
+        year: user.year,
+        upvotes: user.upvotes
+      }
       res.cookie("login", token, { maxAge: 9999 });
       res
         .status(200)
-        .send({ auth: true, token: token, id: user.id, cookie: "login" });
+        .send({ auth: true, token: token, id: user.id, cookie: "login", user: sendUser });
 
       //res.send("Cookie??");
     });
@@ -98,7 +118,7 @@ let Auth = {
     if (req.body.email !== undefined) {
       var emailAddress = req.body.email;
 
-      User.findOne({ email: emailAddress }, function(err, user) {
+      User.findOne({ email: emailAddress }, function (err, user) {
         if (err) return res.status(500).send("Error on the server");
         if (!user) return res.status(404).send("No user with this email");
         var payload = {
@@ -133,7 +153,7 @@ let Auth = {
           html: html
         };
 
-        transporter.sendMail(options, function(err, info) {
+        transporter.sendMail(options, function (err, info) {
           if (err) {
             console.log(err);
             res.json({ yo: "error" });
@@ -156,15 +176,15 @@ let Auth = {
 
       res.send(
         '<form action="/auth-api/resetpassword" method="POST">' +
-          '<input type="hidden" name="id" value="' +
-          payload.id +
-          '" />' +
-          '<input type="hidden" name="token" value="' +
-          req.params.token +
-          '" />' +
-          '<input type="password" name="password" value="" placeholder="Enter your new password..." />' +
-          '<input type="submit" value="Reset Password" />' +
-          "</form>"
+        '<input type="hidden" name="id" value="' +
+        payload.id +
+        '" />' +
+        '<input type="hidden" name="token" value="' +
+        req.params.token +
+        '" />' +
+        '<input type="password" name="password" value="" placeholder="Enter your new password..." />' +
+        '<input type="submit" value="Reset Password" />' +
+        "</form>"
       );
     });
   },
@@ -182,7 +202,7 @@ let Auth = {
       User.findOneAndUpdate(
         { id: req.body.id },
         { password: hashedPassword },
-        function(err, user) {
+        function (err, user) {
           if (err) throw err;
           console.log(user);
         }

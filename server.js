@@ -24,16 +24,16 @@ app.use(bodyParser.json());
 
 // app.set('trust proxy', '1'); Ques esto ????????
 // app.use(cookieParser())
-app.use(
-  session({
-    secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized: true
-    // cookie: {
-    //   secure: true
-    // }, como estamos numa ligação http não vale a pena ter isto visto que só funciona por https
-  })
-);
+// app.use(
+//   session({
+//     secret: process.env.SECRET,
+//     resave: false,
+//     saveUninitialized: true
+//     // cookie: {
+//     //   secure: true
+//     // }, como estamos numa ligação http não vale a pena ter isto visto que só funciona por https
+//   })
+// );
 
 app.use(
   (req, res, next) => {
@@ -44,12 +44,16 @@ app.use(
     console.log(req.session, "Params");
 
     let query = url.parse(req.url).query;
-    console.log(query);
+    // console.log(query);
     next();
   },
   (req, res, next) => {
-    console.log(req.cookie, "cookies");
+    console.log(req.body, "Body");
     next();
+  },
+  (req, res, next) => {
+    console.log(req.cookies, "COOKIES")
+    next()
   }
 );
 
@@ -79,3 +83,10 @@ app.use("/auth-api", authenticationRoute);
 app.use("/data-api", dataRoute);
 
 module.exports = app;
+
+//
+// ## SimpleServer `SimpleServer(obj)`
+//
+// Creates a new instance of SimpleServer with the following options:
+//  * `port` - The HTTP port to listen on. If `process.env.PORT` is set, _it overrides this value_.
+//
