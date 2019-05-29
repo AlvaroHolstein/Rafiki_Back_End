@@ -48,7 +48,7 @@ let crudTag = {
   },
   //Delete Tag
   deleteTag(id) {
-    Tag.findByIdAndRemove(id, function(err) {
+    Tag.findOneAndRemove({ id: id }, function(err) {
       if (err) throw err;
       console.log("Tag Deleted");
     });

@@ -5,12 +5,12 @@ const badgeController = require("../controllers/badges.controller");
 const threadController = require("../controllers/threads.controller");
 const answerController = require("../controllers/answers.controller");
 const commentController = require("../controllers/comments.controller");
-const tagController = require("../controllers/tags.controller")
+const tagController = require("../controllers/tags.controller");
 
 const statisticController = require("../controllers/statistics.controller");
 
 const verifyToken = require("../controllers/auth/VerifyToken");
-router.get("/", function (req, res) {
+router.get("/", function(req, res) {
   // console.log(req);
   res.send("Route para as chamadas à base de dados.");
 });
@@ -21,29 +21,27 @@ router.get("/users", (req, res) => {
   //Função criada no controller
   userController.findAll(res);
 });
-router.get("/users/userByName", (req, res) => {
-  userController.findOneByName(res, req.body.name);
-});
-router.get("/users/rankings", (req, res) => {
-  userController.findByRank(res);
-})
-
-//Esta rota tem que estar no fim dos /users.....
 router.get("/users/:id", (req, res) => {
   //Função criada no controller
   userController.findByID(res, req.params.id);
 });
-
-
-
-router.put("/users/updateuser", verifyToken, (req, res) => {
-  console.log(req.body.user, "/updateUser");
-  res.send(req.userId, "req.userid");
-  // userController.updateUser(res, req.body.user);
+router.get("/users/userByName/:name", (req, res) => {
+  userController.findOneByName(res, req.params.name);
 });
-/* router.post("/adduser", (req, res) => {
-  userController.insertUser(res, req.body.user);
-}); */
+router.get("/users/userByEmail/:email", (req, res) => {
+  userController.findOneByEmail(res, req.params.email);
+});
+router.get("/users/userByRank/rankings", (req, res) => {
+  userController.findByRank(res);
+});
+
+router.put("/users/:id", verifyToken, (req, res) => {
+  console.log(req.body.user);
+  userController.updateUser(res, req.params.id, req.body.user);
+});
+router.delete("/users/:id", verifyToken, (req, res) => {
+  userController.deleteUser(res, req.params.id);
+});
 /**
  * Thread paths
  */
@@ -62,8 +60,8 @@ router.get("/threads/findkeyword", (req, res) => {
 //Get all threads from a user
 router.get("/threads/userThreads/:id", (req, res) => {
   //Working
-  threadController.findByUserId(res, req.params.id)
-})
+  threadController.findByUserId(res, req.params.id);
+});
 
 //Get Threads
 router.get("/threads/:id", (req, res) => {
@@ -86,9 +84,9 @@ router.post("/threads", verifyToken, (req, res) => {
 });
 
 router.post("/threads/findAndExclude", (req, res) => {
-  // 
-  threadController.findAndExclude(req, res)
-})
+  //
+  threadController.findAndExclude(req, res);
+});
 
 //Add Thread
 router.post("/threads/:id/answers", (req, res) => {
@@ -99,23 +97,45 @@ router.post("/threads/:id/answers/:idAnswer/comments", (req, res) => {
   commentController.addComment(res, req.params.idAnswer, req.body.comment);
 }); //Add Comment
 
-
+/*Answers Controller */
 //Encontrar todas as answers de um user
 router.get("/userAnswers/:id", (req, res) => {
   answerController.findByUserId(res, req.params.id);
-})
+});
+
+/*Comments Controller */
 //Encontrar todos os comments de um user
 router.get("/userComments/:id", (req, res) => {
   commentController.findUserComments(res, req.params.id);
-})
+});
+
 //badges.controller
 router.get("/badges", (req, res) => {
   badgeController.findAll(res);
+});
+router.post("/badges", verifyToken, (req, res) => {
+  badgeController.addBadge(
+    req.body.name,
+    req.body.goal,
+    req.body.desc,
+    req.body.category
+  );
+});
+router.delete("/badges/:id", verifyToken, (req, res) => {
+  badgeController.deleteBadge(req.params.id);
 });
 
 //Tag.controller
 router.get("/tags", (req, res) => {
   tagController.findAll(res);
+});
+
+router.post("/tags", (req, res) => {
+  tagController.addTag(req.body.text);
+});
+
+router.delete("/tags/:id", verifyToken, (req, res) => {
+  tagController.deleteTag(req.params.id);
 });
 
 //Rotas para estatisticas

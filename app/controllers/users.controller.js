@@ -12,7 +12,7 @@ let crudUser = {
     });
   },
   findByRank(res) {
-    let users = []
+    let users = [];
     User.find({}, (err, collection) => {
       if (err) {
         console.log(err, "ERRO");
@@ -28,7 +28,7 @@ let crudUser = {
     });
   },
   findByID(res, id) {
-    User.find({id: id}, (err, collection) => {
+    User.find({ id: id }, (err, collection) => {
       if (err) console.log(err);
       res.json(collection[0]);
     });
@@ -53,10 +53,10 @@ let crudUser = {
       }
     });
   },
-  updateUser(res, user) {
+  updateUser(res, id, user) {
     //Encontrar user e atualizar
     //Deve vir um novo objecto user e faz se overwrite do user atual
-    let query = { name: user.name };
+    let query = { id: id };
     // let parsedUser = JSON.parse(user)
     // console.log(parsedUser)
     User.findOneAndUpdate(
@@ -64,11 +64,9 @@ let crudUser = {
       {
         $set: {
           name: user.name,
-          id: user.id,
           follow: user.follow,
           upvotes: user.upvotes,
           notifications: user.notifications,
-          password: user.password,
           email: user.email,
           experience: user.experience,
           picture: user.picture,
@@ -89,26 +87,9 @@ let crudUser = {
     // console.log(a, 'a')
   },
   deleteUser(res, id) {
-    // Encontrar user, eliminá-lo e devolver este user
-  },
-  insertUser(res, user) {
-    User.find({ id: user.id }, (err, collection) => {
-      if (err) console.log(err, "Erro ao procurar user antes de inserir");
-      else {
-        if (collection.length == 0) {
-          let newUser = new User(user);
-          newUser.save(err => {
-            if (err) console.log(err, "erro ao guardar user");
-            else {
-              console.log(newUser, "User inserido com sucesso");
-              res.json(newUser);
-            }
-          });
-        } else {
-          console.log("User já existe");
-          res.json({ userExists: true });
-        }
-      }
+    User.findOneAndRemove({ id: id }, (err, res) => {
+      if (err) throw err;
+      console.log("User Deleted");
     });
   }
 };

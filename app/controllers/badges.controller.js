@@ -54,7 +54,7 @@ let crudBadge = {
   },
 
   deleteBadge(id) {
-    Badge.findByIdAndRemove(id, function(err) {
+    Badge.findOneAndRemove({ id: id }, function(err) {
       if (err) throw err;
       console.log("Badge Deleted");
     });
