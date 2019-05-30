@@ -49,35 +49,20 @@ router.get("/threads", (req, res) => {
   //Working
   threadController.findAll(req, res);
 });
+
 router.get("/threads/findTag", (req, res) => {
   //Working
-  threadController.findByTag(res, ["Vue.js", "JAVASCRIPT"]);
+  threadController.findByTag(res, req.query.tags);
 });
 router.get("/threads/findkeyword", (req, res) => {
   //Working
-  threadController.findByKeyword(res, "TESTE");
+  threadController.findByKeyword(res, req.query.keyword);
 });
 //Get all threads from a user
 router.get("/threads/userThreads/:id", (req, res) => {
   //Working
   threadController.findByUserId(res, req.params.id);
 });
-
-//Get Threads
-router.get("/threads/:id", (req, res) => {
-  //Working
-  threadController.findByID(res, req.params.id);
-}); //Get Thread By ID
-
-router.get("/threads/:id/answers", (req, res) => {
-  answerController.findAnswers(res, req.params.id);
-  console.log(req.params.id);
-}); //Get Answers
-router.get("/threads/:id/answers/:idAnswer/comments", (req, res) => {
-  commentController.findComments(res, req.params.idAnswer);
-  console.log(req.params.idAnswer);
-}); //Get Comments
-
 router.post("/threads", verifyToken, (req, res) => {
   //Working
   threadController.addThread(res, req.body.thread);
@@ -88,19 +73,59 @@ router.post("/threads/findAndExclude", (req, res) => {
   threadController.findAndExclude(req, res);
 });
 
-//Add Thread
-router.post("/threads/:id/answers", (req, res) => {
-  answerController.addAnswer(res, req.params.id, req.body.answer);
-}); //Add Answer
+//Get Threads
+router.get("/threads/:id", (req, res) => {
+  //Working
+  threadController.findByID(res, req.params.id);
+}); //Get Thread By ID
 
-router.post("/threads/:id/answers/:idAnswer/comments", (req, res) => {
-  commentController.addComment(res, req.params.idAnswer, req.body.comment);
-}); //Add Comment
+router.put("/threads", (req, res) => {
+  threadController.updateUserInfo(req.body.user);
+});
+router.put("/threads/:id/close", verifyToken, (req, res) => {
+  threadController.closeDate(req.params.id);
+});
+router.put("/threads/:id/view", (req, res) => {
+  threadController.addView(req.params.id);
+});
+
+router.put("/threads/:id/upvote", verifyToken, (req, res) => {
+  threadController.addUpvote(req.params.id);
+});
+router.put("/threads/:id/downvote", verifyToken, (req, res) => {
+  threadController.removeUpvote(req.params.id);
+});
+
+router.delete("/threads/:id", verifyToken, (req, res) => {
+  threadController.deleteThread(req.params.id);
+});
 
 /*Answers Controller */
 //Encontrar todas as answers de um user
 router.get("/userAnswers/:id", (req, res) => {
   answerController.findByUserId(res, req.params.id);
+});
+//Add Answer
+router.post("/threads/:id/answers", verifyToken, (req, res) => {
+  answerController.addAnswer(res, req.params.id, req.body.answer);
+});
+router.get("/threads/:id/answers", (req, res) => {
+  answerController.findAnswers(res, req.params.id);
+  console.log(req.params.id);
+}); //Get Answers
+
+router.put("/threads/:id/answers/:idAnswer/upvote", verifyToken, (req, res) => {
+  answerController.answerUpvote(req.params.idAnswer);
+});
+router.put(
+  "/threads/:id/answers/:idAnswer/downvote",
+  verifyToken,
+  (req, res) => {
+    answerController.answerDownvote(req.params.idAnswer);
+  }
+);
+router.delete("/threads/:id/answers/:idAnswer", verifyToken, (req, res) => {
+  answerController.deleteAnswer(req.params.idAnswer);
 });
 
 /*Comments Controller */
@@ -108,6 +133,40 @@ router.get("/userAnswers/:id", (req, res) => {
 router.get("/userComments/:id", (req, res) => {
   commentController.findUserComments(res, req.params.id);
 });
+router.post(
+  "/threads/:id/answers/:idAnswer/comments",
+  verifyToken,
+  (req, res) => {
+    commentController.addComment(res, req.params.idAnswer, req.body.comment);
+  }
+); //Add Comment
+
+router.get("/threads/:id/answers/:idAnswer/comments", (req, res) => {
+  commentController.findComments(res, req.params.idAnswer);
+  console.log(req.params.idAnswer);
+}); //Get Comments
+router.put(
+  "/threads/:id/answers/:idAnswer/comments/:idComment/upvote",
+  verifyToken,
+  (req, res) => {
+    commentController.commentUpvote(req.params.idComment);
+  }
+);
+router.put(
+  "/threads/:id/answers/:idAnswer/comments/:idComment/downvote",
+  verifyToken,
+  (req, res) => {
+    commentController.commentDownvote(req.params.idComment);
+  }
+);
+
+router.delete(
+  "/threads/:id/answers/:idAnswer/comments/:idComment",
+  verifyToken,
+  (req, res) => {
+    commentController.deleteComment(req.params.idComment);
+  }
+);
 
 //badges.controller
 router.get("/badges", (req, res) => {
@@ -138,26 +197,58 @@ router.delete("/tags/:id", verifyToken, (req, res) => {
   tagController.deleteTag(req.params.id);
 });
 
-//Rotas para estatisticas
+//Statistics controller
 
 //GetAvgUpvotes
-
+router.get("/avgupvotes", (req, res) => {
+  statisticController.GetAvgUpvotes(res);
+});
 //GetUserUpvotes
-
+router.get("/userupvotes/:id", (req, res) => {
+  statisticController.GetUserUpvotes(res, req.params.id);
+});
 //GetAvgNumberOfThreads
 router.get("/avgThreads", (req, res) => {
   statisticController.GetAvgNumberOfThreads(res);
 });
 //GetUserNumberOfThreads
-
+router.get("/userNumberThreads/:id", (req, res) => {
+  statisticController.GetUserNumberOfThreads(res, req.params.id);
+});
 //GetAvgLevel
 router.get("/avgLevel", (req, res) => {
   statisticController.GetAvgLevel(res);
 });
 //GetUserLevel
-
-//GetAvgNumberOfComments (comments+answers)
-
+router.get("/userLevel/:id", (req, res) => {
+  statisticController.GetUserLevel(res, req.params.id);
+});
+//GetAvgNumberOfAnswers
+router.get("/avgAnswers", (req, res) => {
+  statisticController.GetAvgNumberOfAnswers(res);
+});
+//GetUserNumberOfAnswers
+router.get("/userNumberAnswers/:id", (req, res) => {
+  statisticController.GetUserNumberOfComments(res, req.params.id);
+});
+//GetAvgNumberOfComments
+router.get("/avgcomments", (req, res) => {
+  statisticController.GetAvgNumberOfComments(res);
+});
 //GetUserNumberOfComments
-
+router.get("/userNumberComments/:id", (req, res) => {
+  statisticController.GetUserNumberOfComments(res, req.params.id);
+});
+//HotTopics
+router.get("/hotTopics", (req, res) => {
+  statisticController.GetHotTopics(res);
+});
+//Experience distribution
+router.get("/exp", (req, res) => {
+  statisticController.expDistribution(res);
+});
+//Top Commentators
+router.get("/topCommentators", (req, res) => {
+  statisticController.topCommentator(res);
+});
 module.exports = router;

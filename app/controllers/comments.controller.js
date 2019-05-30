@@ -19,7 +19,7 @@ let crudComment = {
         id = comments[comments.length - 1].id + 1;
       }
 
-      let newComment = Answer({
+      let newComment = Comment({
         id: id,
         idAnswer: idAnswer,
         userInfo: {
@@ -38,17 +38,17 @@ let crudComment = {
     });
   },
   findUserComments(res, id) {
-    Comment.find({"userInfo.userid": id}, (err, collection) => {
-      if(err) console.log(err, "Erro no findUserComments")
-      res.json(collection)
-    })
+    Comment.find({ "userInfo.userid": id }, (err, collection) => {
+      if (err) console.log(err, "Erro no findUserComments");
+      res.json(collection);
+    });
   },
   //Get Comment By Answer ID
   findComments(res, id) {
     /**
-     * O id também vai ser um array
+     * O id também vai ser um array // Será que funciona assim?
      */
-    Comment.find({ idAnswer: {$in: id} }, function(err, collection) {
+    Comment.find({ idAnswer: { $in: id } }, function(err, collection) {
       if (err) throw err;
       res.json(collection);
     });
@@ -56,7 +56,7 @@ let crudComment = {
 
   //Add Upvote
   commentUpvote(id) {
-    Comment.findByIdAndUpdate(id, { $inc: { upvotes: 1 } }, function(
+    Comment.findOneAndUpdate({ id: id }, { $inc: { upvotes: 1 } }, function(
       err,
       answer
     ) {
@@ -67,12 +67,18 @@ let crudComment = {
 
   //Remove Upvote
   commentDownvote(id) {
-    Comment.findByIdAndUpdate(id, { $inc: { upvotes: -1 } }, function(
+    Comment.findOneAndUpdate({ id: id }, { $inc: { upvotes: -1 } }, function(
       err,
       answer
     ) {
       if (err) throw err;
       console.log(answer);
+    });
+  },
+  deleteComment(id) {
+    Comment.findOneAndRemove({ id: id }, err => {
+      if (err) throw err;
+      console.log("Comment Removed");
     });
   }
 };

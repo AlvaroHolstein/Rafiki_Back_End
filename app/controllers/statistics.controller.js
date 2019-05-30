@@ -20,14 +20,16 @@ let stats = {
   },
   //GetUserUpvotes
   GetUserUpvotes(res, id) {
-    Thread.find({ "userInfo.userID": id }, (err, collection) => {
+    console.log(id);
+    Thread.find({ "userInfo.userid": id }, (err, collection) => {
       if (err) throw err;
       let upvotesArr = collection.map(thread => thread.upvotes);
 
       let upvotes = upvotesArr.reduce((total = 0, value, index) =>
         index + 1 <= upvotesArr.length ? (total += value) : 0
       );
-
+      console.log(collection);
+      console.log("numero de upvotes", upvotes);
       res.json(upvotes);
     });
   },
@@ -56,7 +58,7 @@ let stats = {
   },
   //GetUserNumberOfThreads
   GetUserNumberOfThreads(res, id) {
-    Thread.find({ "userInfo.userID": id }, (err, collection) => {
+    Thread.find({ "userInfo.userid": id }, (err, collection) => {
       if (err) throw err;
       res.json(collection.length);
     });
@@ -75,12 +77,15 @@ let stats = {
   },
   //GetUserLevel
   GetUserLevel(res, id) {
-    User.findById(id, (err, collection) => {
-      res.json(collection.experience / 100);
+    User.findOne({ id: id }, (err, collection) => {
+      res.json(Math.round(collection.experience / 100));
     });
   },
   //GetAvgNumberOfComments (comments+answers)
   GetAvgNumberOfComments(res) {
+    let aux = 0;
+    let max = 0;
+    let min = 1000000000;
     Comment.find({}, (err, collection) => {
       let users = collection.map(comment => comment.userInfo.userid);
       for (let i = 0; i < users.length; i++) {
@@ -90,7 +95,7 @@ let stats = {
           }
         }
         if (aux > max) max = aux;
-        if (aux < max) min = aux;
+        if (aux < min) min = aux;
         aux = 0;
       }
       console.log((max + min) / 2);
@@ -98,6 +103,9 @@ let stats = {
     });
   },
   GetAvgNumberOfAnswers(res) {
+    let aux = 0;
+    let max = 0;
+    let min = 1000000000;
     Answer.find({}, (err, collection) => {
       let users = collection.map(answer => answer.userInfo.userid);
       for (let i = 0; i < users.length; i++) {
@@ -107,7 +115,7 @@ let stats = {
           }
         }
         if (aux > max) max = aux;
-        if (aux < max) min = aux;
+        if (aux < min) min = aux;
         aux = 0;
       }
       console.log((max + min) / 2);
@@ -116,15 +124,96 @@ let stats = {
   },
   //GetUserNumberOfComments
   GetUserNumberOfComments(res, id) {
-    Comment.find({ "userInfo.userID": id }, (err, collection) => {
+    Comment.find({ "userInfo.userid": id }, (err, collection) => {
       if (err) throw err;
       res.json(collection.length);
     });
   },
   GetUserNumberOfAnswers(res, id) {
-    Answer.find({ "userInfo.userID": id }, (err, collection) => {
+    Answer.find({ "userInfo.userid": id }, (err, collection) => {
       if (err) throw err;
       res.json(collection.length);
+    });
+  },
+  //Hot Topics -- Top 5 threads com mais views e upvotes
+  GetHotTopics(res) {
+    Thread.find({}, (err, collection) => {
+      if (err) throw err;
+      let hotTopics = collection.map(thread => {
+        let newObj = {
+          id: thread.id,
+          title: thread.title,
+          upvotes: thread.upvotes,
+          views: thread.views,
+          points: thread.upvotes + thread.views
+        };
+        return newObj;
+      });
+
+      hotTopics = hotTopics.sort((a, b) => {
+        if (a.points > b.points) return -1;
+        if (a.points < b.points) return 1;
+        else return 0;
+      });
+      hotTopics.length = 5;
+      res.json(hotTopics);
+    });
+  },
+  //Users with more EXP
+  expDistribution(res) {
+    User.find({}, { _id: 0, password: 0, email: 0 }, (err, collection) => {
+      if (err) throw err;
+      collection = collection.sort((a, b) => {
+        if (a.experience > b.experience) return -1;
+        if (a.expDistribution < b.experience) return 1;
+        else return 0;
+      });
+      collection.length = 5;
+      res.json(collection);
+    });
+  },
+
+  //Top commentators - Users com mais respostas
+  topCommentator(res) {
+    Answer.find({}, (err, collection) => {
+      if (err) throw err;
+      let topcommentators = collection.map(commentator => {
+        let newObj = {
+          id: commentator.userInfo.userid,
+          name: commentator.userInfo.name,
+          number: 0
+        };
+        return newObj;
+      });
+      console.log(topcommentators);
+      if (topcommentators.length > 1) {
+        for (let i = 0; i < topcommentators; i++) {
+          for (let j = 0; j < collection.length; j++) {
+            console.log("id1", topcommentators[i].id);
+            console.log("id2", collection[j].userInfo.userid);
+            if (topcommentators[i].id == collection[j].userInfo.userid) {
+              topcommentators[i].number += 1;
+            }
+          }
+        }
+        topcommentators = topcommentators.sort((a, b) => {
+          if (a.number > b.number) return -1;
+          if (a.number < b.number) return 1;
+          else return 0;
+        });
+
+        topcommentators.length = 5;
+      } else {
+        for (let j = 0; j < collection.length; j++) {
+          console.log("id1", topcommentators[0].id);
+          console.log("id2", collection[j].userInfo.userid);
+          if (topcommentators[0].id == collection[j].userInfo.userid) {
+            topcommentators[0].number += 1;
+          }
+        }
+      }
+
+      res.json(topcommentators);
     });
   }
 };
