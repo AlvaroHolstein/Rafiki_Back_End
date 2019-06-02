@@ -209,6 +209,17 @@ let Auth = {
       );
       res.send("Your password has been successfully changed.");
     });
+  },
+  keepLogged(req, res) {
+
+    User.findById(req.userId, (err, user) => {
+      if(err) throw err
+      
+      console.log(user, "user no keepLogged controller")
+      if(user) {
+        res.json({auth: true, userId: user.id})
+      }
+    })
   }
 };
 

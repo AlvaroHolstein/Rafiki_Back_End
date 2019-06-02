@@ -28,6 +28,11 @@ router.get("/forgotpassword", function(req, res) {
   );
 });
 
+/** Caminho para condirmar se o user se mantém logado ou não */
+router.get("/keepLogged", verifyToken, (req, res) => {
+    console.log(req.userId, "User id nos keepLogged")
+    authController.keepLogged(req, res)
+})
 router.post("/passwordreset", function(req, res) {
   authController.passwordreset(req, res);
 });
@@ -39,4 +44,5 @@ router.get("/resetpassword/:id/:token", function(req, res) {
 router.post("/resetpassword", function(req, res) {
   authController.changepassword(req, res);
 });
+
 module.exports = router;

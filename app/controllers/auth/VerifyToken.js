@@ -2,7 +2,7 @@ var jwt = require("jsonwebtoken");
 var cookieParser = require("cookie-parser");
 const secret = process.env.SECRET;
 function verifyToken(req, res, next) {
-  console.log("Cookie:", JSON.stringify(req.cookies["login"]));
+  console.log(req.cookies, "cookies verufy token");
   var token = req.headers["x-access-token"];
   console.log("token:", token);
   if (!token)
