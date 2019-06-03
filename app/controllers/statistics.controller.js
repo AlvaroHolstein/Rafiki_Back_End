@@ -187,15 +187,18 @@ let stats = {
       });
       console.log(topcommentators);
       if (topcommentators.length > 1) {
-        for (let i = 0; i < topcommentators; i++) {
+        for (let i = 0; i < topcommentators.length; i++) {
           for (let j = 0; j < collection.length; j++) {
+            console.log("Que se passa?");
             console.log("id1", topcommentators[i].id);
             console.log("id2", collection[j].userInfo.userid);
             if (topcommentators[i].id == collection[j].userInfo.userid) {
               topcommentators[i].number += 1;
+              console.log("Devia Atualizar", topcommentators[0].number);
             }
           }
         }
+
         topcommentators = topcommentators.sort((a, b) => {
           if (a.number > b.number) return -1;
           if (a.number < b.number) return 1;
@@ -209,6 +212,7 @@ let stats = {
           console.log("id2", collection[j].userInfo.userid);
           if (topcommentators[0].id == collection[j].userInfo.userid) {
             topcommentators[0].number += 1;
+            console.log("Devia Atualizar", topcommentators[0].number);
           }
         }
       }
