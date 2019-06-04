@@ -56,9 +56,9 @@ let crudUser = {
   updateUser(res, id, user) {
     //Encontrar user e atualizar
     //Deve vir um novo objecto user e faz se overwrite do user atual
+    //Vai ser assim que se vai fazer o update do follow e das notificações
     let query = { id: id };
-    // let parsedUser = JSON.parse(user)
-    // console.log(parsedUser)
+
     User.findOneAndUpdate(
       query,
       {

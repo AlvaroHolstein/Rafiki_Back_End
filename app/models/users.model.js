@@ -32,7 +32,7 @@ const userSchema = Schema({
     default: "http://www.coffeebrain.org/wiki/images/9/93/PEOPLE-NoFoto.JPG"
   },
   follow: {
-    type: [Number],
+    type: [Number], // Array com os id's das threads a seguir
     default: []
   },
   year: {
@@ -44,7 +44,7 @@ const userSchema = Schema({
     default: ""
   },
   upvotes: {
-    type: Array,
+    type: Array, //Array com o objeto de upvote
     default: []
   },
   notifications: {

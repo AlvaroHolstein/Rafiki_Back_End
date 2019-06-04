@@ -82,6 +82,12 @@ router.get("/threads/:id", (req, res) => {
 router.put("/threads", (req, res) => {
   threadController.updateUserInfo(req.body.user);
 });
+router.put("/threads/:id/follow", (req, res) => {
+  threadController.follow(res, req.params.id)
+})
+router.put("/threads/:id/unfollow", (req, res) => {
+  threadController.unFollow(res, req.params.id)
+})
 router.put("/threads/:id/close", verifyToken, (req, res) => {
   threadController.closeDate(req.params.id);
 });
