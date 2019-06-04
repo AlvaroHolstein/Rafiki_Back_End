@@ -128,6 +128,10 @@ router.delete("/threads/:id/answers/:idAnswer", verifyToken, (req, res) => {
   answerController.deleteAnswer(req.params.idAnswer);
 });
 
+router.put("/answers/update", (req,res)=>{
+  answerController.updateUserInfo(req.body.user)
+})
+
 /*Comments Controller */
 //Encontrar todos os comments de um user
 router.get("/userComments/:id", (req, res) => {
@@ -167,6 +171,9 @@ router.delete(
     commentController.deleteComment(req.params.idComment);
   }
 );
+router.put("/comments/update", (req,res)=>{
+  commentController.updateUserInfo(req.body.user)
+})
 
 //badges.controller
 router.get("/badges", (req, res) => {

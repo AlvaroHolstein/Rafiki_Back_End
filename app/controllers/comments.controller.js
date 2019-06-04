@@ -80,7 +80,17 @@ let crudComment = {
       if (err) throw err;
       console.log("Comment Removed");
     });
-  }
+  },
+  updateUserInfo(user) {
+    Comment.updateMany(
+      { "userInfo.userid": user.userid },
+      { userInfo: user },
+      function(err, comment) {
+        if (err) throw err;
+        console.log(comment);
+      }
+    );
+  },
 };
 
 module.exports = crudComment;
