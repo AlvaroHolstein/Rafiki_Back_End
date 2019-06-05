@@ -219,6 +219,27 @@ let stats = {
 
       res.json(topcommentators);
     });
+  },
+  mostViewed(res) {
+    Thread.find({}, (err, collection) => {
+      if (err) throw err;
+      let hotTopics = collection.map(thread => {
+        let newObj = {
+          id: thread.id,
+          title: thread.title,
+          views: thread.views
+        };
+        return newObj;
+      });
+
+      hotTopics = hotTopics.sort((a, b) => {
+        if (a.views > b.views) return -1;
+        if (a.views < b.views) return 1;
+        else return 0;
+      });
+      hotTopics.length = 5;
+      res.json(hotTopics);
+    });
   }
 };
 

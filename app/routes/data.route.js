@@ -36,8 +36,8 @@ router.get("/users/userByRank/rankings", (req, res) => {
 });
 
 router.put("/users/noemail/:id", (req, res) => {
-    userController.updateUserNoEmail(res, req.params.id, req.body.user)
-})
+  userController.updateUserNoEmail(res, req.params.id, req.body.user);
+});
 router.put("/users/:id", verifyToken, (req, res) => {
   console.log(req.body.user);
   userController.updateUser(res, req.params.id, req.body.user);
@@ -55,6 +55,7 @@ router.get("/threads", (req, res) => {
 
 router.get("/threads/findTag", (req, res) => {
   //Working
+  console.log("QUERYYY", req.query);
   threadController.findByTag(res, req.query.tags);
 });
 router.get("/threads/findkeyword", (req, res) => {
@@ -86,11 +87,11 @@ router.put("/threads", (req, res) => {
   threadController.updateUserInfo(req.body.user);
 });
 router.put("/threads/:id/follow", (req, res) => {
-  threadController.follow(res, req.params.id)
-})
+  threadController.follow(res, req.params.id);
+});
 router.put("/threads/:id/unfollow", (req, res) => {
-  threadController.unfollow(res, req.params.id)
-})
+  threadController.unfollow(res, req.params.id);
+});
 router.put("/threads/:id/close", verifyToken, (req, res) => {
   threadController.closeDate(req.params.id);
 });
@@ -137,9 +138,9 @@ router.delete("/threads/:id/answers/:idAnswer", verifyToken, (req, res) => {
   answerController.deleteAnswer(req.params.idAnswer);
 });
 
-router.put("/answers/update", (req,res)=>{
-  answerController.updateUserInfo(req.body.user)
-})
+router.put("/answers/update", (req, res) => {
+  answerController.updateUserInfo(req.body.user);
+});
 
 /*Comments Controller */
 //Encontrar todos os comments de um user
@@ -180,9 +181,9 @@ router.delete(
     commentController.deleteComment(req.params.idComment);
   }
 );
-router.put("/comments/update", (req,res)=>{
-  commentController.updateUserInfo(req.body.user)
-})
+router.put("/comments/update", (req, res) => {
+  commentController.updateUserInfo(req.body.user);
+});
 
 //badges.controller
 router.get("/badges", (req, res) => {
@@ -258,6 +259,11 @@ router.get("/userNumberComments/:id", (req, res) => {
 //HotTopics
 router.get("/hotTopics", (req, res) => {
   statisticController.GetHotTopics(res);
+});
+
+//MostViewed
+router.get("/mostViewed", (req, res) => {
+  statisticController.mostViewed(res);
 });
 //Experience distribution
 router.get("/exp", (req, res) => {
