@@ -58,7 +58,7 @@ let crudUser = {
     //Deve vir um novo objecto user e faz se overwrite do user atual
     //Vai ser assim que se vai fazer o update do follow e das notificações
     let query = { id: id };
-
+    console.log(user, "Este é u user no updateUser !!!!!!!!!!!!!!!")
     User.findOneAndUpdate(
       query,
       {
@@ -85,6 +85,34 @@ let crudUser = {
       }
     );
     // console.log(a, 'a')
+  },
+  updateUserNoEmail(res, id, user) {
+    let query = { id: id };
+    console.log(user, "Este é u user no updateUserNoEmail !!!!!!!!!!!!!!!")
+    User.findOneAndUpdate(
+      query,
+      {
+        $set: {
+          // name: user.name,
+          follow: user.follow,
+          // upvotes: user.upvotes,
+          // notifications: user.notifications,
+          // experience: user.experience,
+          // picture: user.picture,
+          // year: user.year,
+          // course: user.course,
+          // description: user.description
+        }
+      },
+      { useFindAndModify: false, new: true, overwrite: true },
+      (err, collection) => {
+        if (err) console.log(err);
+        else {
+          console.log(collection, "a collection");
+          res.json(collection);
+        }
+      }
+    );
   },
   deleteUser(res, id) {
     User.findOneAndRemove({ id: id }, (err, res) => {

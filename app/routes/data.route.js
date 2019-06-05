@@ -35,6 +35,9 @@ router.get("/users/userByRank/rankings", (req, res) => {
   userController.findByRank(res);
 });
 
+router.put("/users/noemail/:id", (req, res) => {
+    userController.updateUserNoEmail(res, req.params.id, req.body.user)
+})
 router.put("/users/:id", verifyToken, (req, res) => {
   console.log(req.body.user);
   userController.updateUser(res, req.params.id, req.body.user);
@@ -86,7 +89,7 @@ router.put("/threads/:id/follow", (req, res) => {
   threadController.follow(res, req.params.id)
 })
 router.put("/threads/:id/unfollow", (req, res) => {
-  threadController.unFollow(res, req.params.id)
+  threadController.unfollow(res, req.params.id)
 })
 router.put("/threads/:id/close", verifyToken, (req, res) => {
   threadController.closeDate(req.params.id);
