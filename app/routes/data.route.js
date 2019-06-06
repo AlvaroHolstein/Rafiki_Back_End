@@ -45,6 +45,11 @@ router.put("/users/:id", verifyToken, (req, res) => {
 router.delete("/users/:id", verifyToken, (req, res) => {
   userController.deleteUser(res, req.params.id);
 });
+
+//Contact Form
+router.post("/contact",(req,res)=>{
+  userController.contact(req,res)
+})
 /**
  * Thread paths
  */

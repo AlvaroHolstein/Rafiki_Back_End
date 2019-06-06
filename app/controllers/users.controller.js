@@ -1,4 +1,5 @@
 const { User } = require("../models/users.model");
+var nodemailer = require("nodemailer");
 
 let crudUser = {
   findAll(res) {
@@ -119,6 +120,39 @@ let crudUser = {
       if (err) throw err;
       console.log("User Deleted");
     });
+  },
+  contact(req,res){
+    if(req.body-email!==undefined){
+      var emailAddres = req.body.email
+      var transporter = nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+          user: "rafikiteam18.19@gmail.com", //Mail
+          pass: "Rafiki1234!" //Password
+        }
+      });
+      var html= `<p>${req.body.name}</p>
+                <p>${req.body.message}</p>
+      `
+      var options = {
+        from:emailAddres,
+        to:"rafikiteam18.19@gmail.com",
+        subject:req.body.subject,
+        html:html
+      }
+      transporter.sendMail(options,function(err,info){
+        if(err){
+          console.log(err)
+          res.json({yo:"error"})
+        }else{
+          console.log("Message sent"+info.response)
+          res.json({yo:info.response})
+        }
+      })
+      res.send("<p>Mail Sent</p>")
+    }else{
+      res.send("Email address is missing")
+    }
   }
 };
 
