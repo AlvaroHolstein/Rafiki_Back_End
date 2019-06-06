@@ -39,8 +39,8 @@ router.get("/users/userByRank/rankings", (req, res) => {
   userController.findByRank(res);
 });
 
-router.put("/users/noemail/:id", (req, res) => {
-  userController.updateUserNoEmail(res, req.params.id, req.body.user);
+router.put("/users/changeFollow/:id", (req, res) => {
+  userController.changeFollow(res, req.params.id, req.body.follow);
 });
 router.put("/users/:id", verifyToken, (req, res) => {
   console.log(req.body.user);

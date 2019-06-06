@@ -87,25 +87,18 @@ let crudUser = {
     );
     // console.log(a, 'a')
   },
-  updateUserNoEmail(res, id, user) {
+  changeFollow(res, id, follow) {
+    /**
+     * Usar este método depois de ter os parametros que se envia todos calculados
+     */
     let query = { id: id };
     console.log(user, "Este é u user no updateUserNoEmail !!!!!!!!!!!!!!!")
     User.findOneAndUpdate(
       query,
       {
-        $set: {
-          // name: user.name,
-          follow: user.follow,
-          upvotes: user.upvotes,
-          notifications: user.notifications,
-          experience: user.experience,
-          // picture: user.picture,
-          // year: user.year,
-          // course: user.course,
-          // description: user.description
-        }
+        $set: { follow: user.follow }
       },
-      { useFindAndModify: false, new: true, overwrite: true },
+      { useFindAndModify: false, overwrite: true },
       (err, collection) => {
         if (err) console.log(err);
         else {
@@ -119,11 +112,11 @@ let crudUser = {
     User.findOneAndRemove({ id: id }, (err, res) => {
       if (err) throw err;
       console.log("User Deleted");
-      res.json({msg: "success"})
+      res.json({ msg: "success" })
     });
   },
-  contact(req,res){
-    if(req.body.email!==undefined){
+  contact(req, res) {
+    if (req.body.email !== undefined) {
       var emailAddres = req.body.email
       var transporter = nodemailer.createTransport({
         service: "Gmail",
@@ -132,22 +125,22 @@ let crudUser = {
           pass: "Rafiki1234!" //Password
         }
       });
-      var html= `<p>${req.body.name}</p>
+      var html = `<p>${req.body.name}</p>
                 <p>${req.body.message}</p>
       `
       var options = {
-        from:emailAddres,
-        to:"rafikiteam18.19@gmail.com",
-        subject:req.body.subject,
-        html:html
+        from: emailAddres,
+        to: "rafikiteam18.19@gmail.com",
+        subject: req.body.subject,
+        html: html
       }
-      transporter.sendMail(options,function(err,info){
-        if(err){
+      transporter.sendMail(options, function (err, info) {
+        if (err) {
           console.log(err)
-          res.json({yo:"error"})
-        }else{
-          console.log("Message sent"+info.response)
-          res.json({yo:info.response})
+          res.json({ yo: "error" })
+        } else {
+          console.log("Message sent" + info.response)
+          res.json({ yo: info.response })
         }
       })
       
@@ -162,14 +155,23 @@ let crudUser = {
      * porque a ideia é não receber experiencia se um mesmo user der e tirar um 
      * upvote duas vezes seguidas por exemplo.
      */
-    User.findOne({id: id}, (err, user) => {
-      if(err) throw err;
-      for(let upv of user.burnedUpvotes) {
-        if(upv.threadId == upvote.threadId && upv.answerId == upvote.answerId && upv.commentId == upvote.commentId && upv) {
-          res.json({msg: "Burned", isBurned: true})
+    User.findOne({ id: id }, (err, user) => {
+      if (err) throw err;
+      console.log(user.burnedUpvotes, "BURNNNNNNNNNNNNNN||!!!!!!!!!!!!")
+      if (user.burnedUpvotes == undefined) user.burnedUpvotes = []
+      for (let upv of user.burnedUpvotes) {
+        if (upv.threadId == upvote.threadId && upv.answerId == upvote.answerId && upv.commentId == upvote.commentId && upv.userId == upvote.userId) {
+          res.json({ msg: "Burned", isBurned: true })
         }
       }
-      res.json({msg: "Not Burned", isBurned: false})
+      console.log(upvote)
+      user.burnedUpvotes.push(upvote)
+      User.findOneAndUpdate({ id: id }, { $set: { burnedUpvotes: user.burnedUpvotes } }, { useFindAndModify: false },
+        (err, user) => {
+          if (err) throw err;
+          res.json({ msg: "Not Burned", isBurned: false })
+        })
+
     })
   }
 };
