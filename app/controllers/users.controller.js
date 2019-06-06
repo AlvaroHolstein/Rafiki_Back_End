@@ -150,7 +150,8 @@ let crudUser = {
           res.json({yo:info.response})
         }
       })
-      res.send("<p>Mail Sent</p>")
+      
+      res.send(`<p>Mail Sent Subject:${req.body.subject}</p>`)
     }else{
       res.send("Email address is missing")
     }
