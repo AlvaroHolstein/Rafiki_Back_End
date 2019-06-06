@@ -44,11 +44,22 @@ const userSchema = Schema({
     default: ""
   },
   upvotes: {
+    /**
+     * id - Para poder ser usado na notificação se necessário
+     * idThread
+     * idAnswer
+     * idComment
+     */
     type: Array, //Array com o objeto de upvote
     default: []
   },
   notifications: {
-    type: [Number],
+    /**
+     * id
+     * idUserFirst
+     * idUpvote
+     */
+    type: Array, //Array com o objecto notificações
     default: []
   }
 });

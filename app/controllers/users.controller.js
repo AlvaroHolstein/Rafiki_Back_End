@@ -68,7 +68,7 @@ let crudUser = {
           follow: user.follow,
           upvotes: user.upvotes,
           notifications: user.notifications,
-          email: user.email,
+          // email: user.email, Por agora so se estaria a por o email a null
           experience: user.experience,
           picture: user.picture,
           year: user.year,
@@ -96,9 +96,9 @@ let crudUser = {
         $set: {
           // name: user.name,
           follow: user.follow,
-          // upvotes: user.upvotes,
-          // notifications: user.notifications,
-          // experience: user.experience,
+          upvotes: user.upvotes,
+          notifications: user.notifications,
+          experience: user.experience,
           // picture: user.picture,
           // year: user.year,
           // course: user.course,
@@ -119,10 +119,11 @@ let crudUser = {
     User.findOneAndRemove({ id: id }, (err, res) => {
       if (err) throw err;
       console.log("User Deleted");
+      res.json({msg: "success"})
     });
   },
   contact(req,res){
-    if(req.body-email!==undefined){
+    if(req.body.email!==undefined){
       var emailAddres = req.body.email
       var transporter = nodemailer.createTransport({
         service: "Gmail",
@@ -153,6 +154,22 @@ let crudUser = {
     }else{
       res.send("Email address is missing")
     }
+  },
+  isBurnedUpv(res, id, upvote) {
+    /**
+     * Caralho.... Devia ter aqui também um id do user, 
+     * porque a ideia é não receber experiencia se um mesmo user der e tirar um 
+     * upvote duas vezes seguidas por exemplo.
+     */
+    User.findOne({id: id}, (err, user) => {
+      if(err) throw err;
+      for(let upv of user.burnedUpvotes) {
+        if(upv.threadId == upvote.threadId && upv.answerId == upvote.answerId && upv.commentId == upvote.commentId && upv) {
+          res.json({msg: "Burned", isBurned: true})
+        }
+      }
+      res.json({msg: "Not Burned", isBurned: false})
+    })
   }
 };
 

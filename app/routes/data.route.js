@@ -25,6 +25,10 @@ router.get("/users/:id", (req, res) => {
   //Função criada no controller
   userController.findByID(res, req.params.id);
 });
+router.post("/users/:id/isBurnedUpv", (req, res) => {
+  //Testar
+  userController.isBurnedUpv(res, req.params.id, req.body.upvote)
+})
 router.get("/users/userByName/:name", (req, res) => {
   userController.findOneByName(res, req.params.name);
 });

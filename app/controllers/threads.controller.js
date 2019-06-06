@@ -189,6 +189,7 @@ let crudThread = {
       function (err, thread) {
         if (err) throw err;
         console.log(thread);
+        // res.json({msg: "success", data: thread})
       }
     );
   },
@@ -201,6 +202,7 @@ let crudThread = {
     ) {
       if (err) throw err;
       console.log(thread);
+      // res.json({msg: "success", data: thread})
     });
   },
   //Add View
@@ -211,6 +213,7 @@ let crudThread = {
     ) {
       if (err) throw err;
       console.log(thread);
+      // res.json({msg: "success", data: thread})
     });
   },
   //Add Upvote
@@ -221,6 +224,7 @@ let crudThread = {
     ) {
       if (err) throw err;
       console.log(thread);
+      // res.json({msg: "success", data: thread})
     });
   },
   //Remove Upvote
@@ -231,25 +235,29 @@ let crudThread = {
     ) {
       if (err) throw err;
       console.log(thread);
+      // res.json({msg: "success", data: thread})
     });
   },
   //Delete Thread
   deleteThread(id) {
-    Thread.findOneAndRemove({ id: id }, function (err) {
+    Thread.findOneAndRemove({ id: id }, function (err, thread) {
       if (err) throw err;
       console.log("Thread Deleted");
+      // res.json({msg: "success", data: thread})
     });
   },
   follow(res, id) {
-    Thread.findOneAndUpdate({ id: id }, { $inc: { follow: 1 } }, (err) => {
-      if (err) throw err
+    Thread.findOneAndUpdate({ id: id }, { $inc: { follow: 1 } }, (err, thread) => {
+      if (err) res.json(err)
       console.log("Add follow")
+      res.json({msg: "success", data: thread})
     })
   },
   unfollow(res, id) {
-    Thread.findOneAndUpdate({ id: id }, { $inc: { follow: -1 } }, err => {
+    Thread.findOneAndUpdate({ id: id }, { $inc: { follow: -1 } }, (err, thread) => {
       if (err) throw err
       console.log("Remove follow")
+      res.json({msg: "success", data: thread, done: true})
     })
   }
 };
