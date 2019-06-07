@@ -32,7 +32,7 @@ const userSchema = Schema({
     default: "http://www.coffeebrain.org/wiki/images/9/93/PEOPLE-NoFoto.JPG"
   },
   follow: {
-    type: [Number],
+    type: [Number], // Array com os id's das threads a seguir
     default: []
   },
   year: {
@@ -44,12 +44,43 @@ const userSchema = Schema({
     default: ""
   },
   upvotes: {
+    /**
+     * idThread
+     * idAnswer
+     * idComment
+     */
     type: Array,
     default: []
   },
   notifications: {
-    type: [Number],
+    /**
+     * id
+     * idUserFirst
+     * text
+     * visto
+     * date
+     */
+    type: Array, //Array com o objecto notificações
     default: []
+  },
+  burnedFollow: {
+    /** VAi guardar os id's das threads que já deram experiencia por
+     * um determinado useer ter dado follow
+     * idUser
+     * idThread
+     */
+    type: Array,
+    default: []
+  },
+  burnedUpvotes: {
+    /**
+     * idUser
+     * idThread
+     * idAnswer
+     * idComment
+     */
+    type: Array,
+    defualt: []
   }
 });
 

@@ -34,6 +34,10 @@ const threadSchema = Schema({
   },
   views: {
     type: Number
+  },
+  follow: {
+    type: Number,
+    default: 0
   }
 });
 

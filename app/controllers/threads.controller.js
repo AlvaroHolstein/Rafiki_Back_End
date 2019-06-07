@@ -39,7 +39,7 @@ let crudThread = {
       if (err) throw err;
       threads = collection;
       if (threads.length != 0) {
-        threads.sort(function(a, b) {
+        threads.sort(function (a, b) {
           if (a.id > b.id) return 1;
           if (a.id < b.id) return -1;
         });
@@ -60,7 +60,7 @@ let crudThread = {
         date: new Date(),
         views: 0
       });
-      newThread.save(function(err) {
+      newThread.save(function (err) {
         if (err) throw err;
         console.log("Thread Added");
         res.json(newThread);
@@ -186,59 +186,79 @@ let crudThread = {
     Thread.updateMany(
       { "userInfo.userid": user.userid },
       { userInfo: user },
-      function(err, thread) {
+      function (err, thread) {
         if (err) throw err;
         console.log(thread);
+        // res.json({msg: "success", data: thread})
       }
     );
   },
 
   //Close Thread
   closeDate(id) {
-    Thread.findOneAndUpdate({ id: id }, { closeDate: new Date() }, function(
+    Thread.findOneAndUpdate({ id: id }, { closeDate: new Date() }, function (
       err,
       thread
     ) {
       if (err) throw err;
       console.log(thread);
+      // res.json({msg: "success", data: thread})
     });
   },
   //Add View
   addView(id) {
-    Thread.findOneAndUpdate({ id: id }, { $inc: { views: 1 } }, function(
+    Thread.findOneAndUpdate({ id: id }, { $inc: { views: 1 } }, function (
       err,
       thread
     ) {
       if (err) throw err;
       console.log(thread);
+      // res.json({msg: "success", data: thread})
     });
   },
   //Add Upvote
   addUpvote(id) {
-    Thread.findOneAndUpdate({ id: id }, { $inc: { upvotes: 1 } }, function(
+    Thread.findOneAndUpdate({ id: id }, { $inc: { upvotes: 1 } }, function (
       err,
       thread
     ) {
       if (err) throw err;
       console.log(thread);
+      // res.json({msg: "success", data: thread})
     });
   },
   //Remove Upvote
   removeUpvote(id) {
-    Thread.findOneAndUpdate({ id: id }, { $inc: { upvotes: -1 } }, function(
+    Thread.findOneAndUpdate({ id: id }, { $inc: { upvotes: -1 } }, function (
       err,
       thread
     ) {
       if (err) throw err;
       console.log(thread);
+      // res.json({msg: "success", data: thread})
     });
   },
   //Delete Thread
   deleteThread(id) {
-    Thread.findOneAndRemove({ id: id }, function(err) {
+    Thread.findOneAndRemove({ id: id }, function (err, thread) {
       if (err) throw err;
       console.log("Thread Deleted");
+      // res.json({msg: "success", data: thread})
     });
+  },
+  follow(res, id) {
+    Thread.findOneAndUpdate({ id: id }, { $inc: { follow: 1 } }, (err, thread) => {
+      if (err) res.json(err)
+      console.log("Add follow")
+      res.json({msg: "success", data: thread})
+    })
+  },
+  unfollow(res, id) {
+    Thread.findOneAndUpdate({ id: id }, { $inc: { follow: -1 } }, (err, thread) => {
+      if (err) throw err
+      console.log("Remove follow")
+      res.json({msg: "success", data: thread, done: true})
+    })
   }
 };
 module.exports = crudThread;

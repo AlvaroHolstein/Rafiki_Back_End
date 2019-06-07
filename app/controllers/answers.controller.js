@@ -86,6 +86,16 @@ let crudAnswer = {
       if (err) throw err;
       else console.log("Answer Deleted");
     });
-  }
+  },
+  updateUserInfo(user) {
+   Answer.updateMany(
+      { "userInfo.userid": user.userid },
+      { userInfo: user },
+      function(err, answer) {
+        if (err) throw err;
+        console.log(answer);
+      }
+    );
+  },
 };
 module.exports = crudAnswer;

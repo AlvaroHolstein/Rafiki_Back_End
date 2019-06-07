@@ -25,6 +25,14 @@ router.get("/users/:id", (req, res) => {
   //Função criada no controller
   userController.findByID(res, req.params.id);
 });
+router.post("/users/:id/isBurnedUpv", (req, res) => {
+  //Working (postman)
+  userController.isBurnedUpv(res, req.params.id, req.body.upvote)
+})
+router.post("/users/:id/isBurnedFollow", (req, res) => {
+  //Testar
+  userController.isBurnedFollow(res, req.params.id, req.body.follow)
+})
 router.get("/users/userByName/:name", (req, res) => {
   userController.findOneByName(res, req.params.name);
 });
@@ -35,6 +43,9 @@ router.get("/users/userByRank/rankings", (req, res) => {
   userController.findByRank(res);
 });
 
+router.put("/users/changeFollow/:id", (req, res) => {
+  userController.changeFollow(res, req.params.id, req.body.follow);
+});
 router.put("/users/:id", verifyToken, (req, res) => {
   console.log(req.body.user);
   userController.updateUser(res, req.params.id, req.body.user);
@@ -42,6 +53,11 @@ router.put("/users/:id", verifyToken, (req, res) => {
 router.delete("/users/:id", verifyToken, (req, res) => {
   userController.deleteUser(res, req.params.id);
 });
+
+//Contact Form
+router.post("/contact",(req,res)=>{
+  userController.contact(req,res)
+})
 /**
  * Thread paths
  */
@@ -52,6 +68,7 @@ router.get("/threads", (req, res) => {
 
 router.get("/threads/findTag", (req, res) => {
   //Working
+  console.log("QUERYYY", req.query);
   threadController.findByTag(res, req.query.tags);
 });
 router.get("/threads/findkeyword", (req, res) => {
@@ -81,6 +98,12 @@ router.get("/threads/:id", (req, res) => {
 
 router.put("/threads", (req, res) => {
   threadController.updateUserInfo(req.body.user);
+});
+router.put("/threads/:id/follow", (req, res) => {
+  threadController.follow(res, req.params.id);
+});
+router.put("/threads/:id/unfollow", (req, res) => {
+  threadController.unfollow(res, req.params.id);
 });
 router.put("/threads/:id/close", verifyToken, (req, res) => {
   threadController.closeDate(req.params.id);
@@ -128,6 +151,10 @@ router.delete("/threads/:id/answers/:idAnswer", verifyToken, (req, res) => {
   answerController.deleteAnswer(req.params.idAnswer);
 });
 
+router.put("/answers/update", (req, res) => {
+  answerController.updateUserInfo(req.body.user);
+});
+
 /*Comments Controller */
 //Encontrar todos os comments de um user
 router.get("/userComments/:id", (req, res) => {
@@ -167,6 +194,9 @@ router.delete(
     commentController.deleteComment(req.params.idComment);
   }
 );
+router.put("/comments/update", (req, res) => {
+  commentController.updateUserInfo(req.body.user);
+});
 
 //badges.controller
 router.get("/badges", (req, res) => {
@@ -242,6 +272,11 @@ router.get("/userNumberComments/:id", (req, res) => {
 //HotTopics
 router.get("/hotTopics", (req, res) => {
   statisticController.GetHotTopics(res);
+});
+
+//MostViewed
+router.get("/mostViewed", (req, res) => {
+  statisticController.mostViewed(res);
 });
 //Experience distribution
 router.get("/exp", (req, res) => {

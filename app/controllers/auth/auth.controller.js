@@ -147,7 +147,7 @@ let Auth = {
           '">Reset password</a></p>';
 
         var options = {
-          from: "j.henrique.campos.99@gmail.com",
+          from: "rafikiteam18.19@gmail.com",
           to: user.email,
           subject: "Password Recovery",
           html: html
