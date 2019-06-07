@@ -45,22 +45,42 @@ const userSchema = Schema({
   },
   upvotes: {
     /**
-     * id - Para poder ser usado na notificação se necessário
      * idThread
      * idAnswer
      * idComment
      */
-    type: Array, //Array com o objeto de upvote
+    type: Array,
     default: []
   },
   notifications: {
     /**
      * id
      * idUserFirst
-     * idUpvote
+     * text
+     * visto
+     * date
      */
     type: Array, //Array com o objecto notificações
     default: []
+  },
+  burnedFollow: {
+    /** VAi guardar os id's das threads que já deram experiencia por
+     * um determinado useer ter dado follow
+     * idUser
+     * idThread
+     */
+    type: Array,
+    default: []
+  },
+  burnedUpvotes: {
+    /**
+     * idUser
+     * idThread
+     * idAnswer
+     * idComment
+     */
+    type: Array,
+    defualt: []
   }
 });
 

@@ -26,8 +26,12 @@ router.get("/users/:id", (req, res) => {
   userController.findByID(res, req.params.id);
 });
 router.post("/users/:id/isBurnedUpv", (req, res) => {
-  //Testar
+  //Working (postman)
   userController.isBurnedUpv(res, req.params.id, req.body.upvote)
+})
+router.post("/users/:id/isBurnedFollow", (req, res) => {
+  //Testar
+  userController.isBurnedFollow(res, req.params.id, req.body.follow)
 })
 router.get("/users/userByName/:name", (req, res) => {
   userController.findOneByName(res, req.params.name);
