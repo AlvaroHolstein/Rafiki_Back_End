@@ -87,9 +87,11 @@ let crudUser = {
     // console.log(a, 'a')
   },
   deleteUser(res, id) {
-    User.findOneAndRemove({ id: id }, (err, res) => {
+    User.findOneAndRemove({ id: id }, (err, resp) => {
       if (err) throw err;
       console.log("User Deleted");
+      let success=true
+      res.json({success: success})
     });
   }
 };
