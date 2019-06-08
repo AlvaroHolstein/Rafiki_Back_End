@@ -120,7 +120,7 @@ router.put("/threads/:id/downvote", verifyToken, (req, res) => {
 });
 
 router.delete("/threads/:id", verifyToken, (req, res) => {
-  threadController.deleteThread(req.params.id);
+  threadController.deleteThread(res, req.params.id);
 });
 
 /*Answers Controller */
@@ -204,6 +204,7 @@ router.get("/badges", (req, res) => {
 });
 router.post("/badges", verifyToken, (req, res) => {
   badgeController.addBadge(
+    res,
     req.body.name,
     req.body.goal,
     req.body.desc,
@@ -211,7 +212,7 @@ router.post("/badges", verifyToken, (req, res) => {
   );
 });
 router.delete("/badges/:id", verifyToken, (req, res) => {
-  badgeController.deleteBadge(req.params.id);
+  badgeController.deleteBadge(res,req.params.id);
 });
 
 //Tag.controller
@@ -220,11 +221,11 @@ router.get("/tags", (req, res) => {
 });
 
 router.post("/tags", (req, res) => {
-  tagController.addTag(req.body.text);
+  tagController.addTag(res, req.body.text);
 });
 
 router.delete("/tags/:id", verifyToken, (req, res) => {
-  tagController.deleteTag(req.params.id);
+  tagController.deleteTag(res, req.params.id);
 });
 
 //Statistics controller

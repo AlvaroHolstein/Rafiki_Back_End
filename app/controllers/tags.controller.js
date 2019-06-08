@@ -16,7 +16,7 @@ let crudTag = {
   },
 
   //Add Tag
-  addTag(text) {
+  addTag(res,text) {
     let tags = null;
 
     let id = 1; //Get the last ID
@@ -41,15 +41,19 @@ let crudTag = {
 
         newTag.save(function(err) {
           if (err) throw err;
+          let success=true
+          res.json({success: success})
           console.log("Tag Added");
         });
       }
     });
   },
   //Delete Tag
-  deleteTag(id) {
+  deleteTag(res, id) {
     Tag.findOneAndRemove({ id: id }, function(err) {
       if (err) throw err;
+      let success=true
+      res.json({success: success})
       console.log("Tag Deleted");
     });
   }

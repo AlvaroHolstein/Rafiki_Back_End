@@ -11,7 +11,7 @@ let crudBadge = {
     });
   },
 
-  addBadge(name, goal, desc, category) {
+  addBadge(res, name, goal, desc, category) {
     let badges = null;
     let id = 1;
     Badge.find({}, (err, collection) => {
@@ -46,6 +46,8 @@ let crudBadge = {
 
           newBadge.save(function(err) {
             if (err) throw err;
+            let success=true
+            res.json({success: success})
             console.log("Badge Added");
           });
         }
@@ -53,10 +55,13 @@ let crudBadge = {
     });
   },
 
-  deleteBadge(id) {
+  deleteBadge(res, id) {
+    console.log(id,"id !!!!!!!!!!!!!!!!!!!!!!!!!!!")
     Badge.findOneAndRemove({ id: id }, function(err) {
       if (err) throw err;
       console.log("Badge Deleted");
+      let success=true
+      res.json({success: success})
     });
   }
 };
