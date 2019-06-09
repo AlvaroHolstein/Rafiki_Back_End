@@ -45,14 +45,13 @@ const userSchema = Schema({
   },
   upvotes: {
     /**
-     * idThread
-     * idAnswer
-     * idComment
+     * idUpvote (_id)
+     * type (th, ans, com)
      */
     type: Array,
     default: []
   },
-  notifications: {
+  notifications: { //Ver melhor
     /**
      * id
      * idUserFirst
@@ -62,25 +61,6 @@ const userSchema = Schema({
      */
     type: Array, //Array com o objecto notificações
     default: []
-  },
-  burnedFollow: {
-    /** VAi guardar os id's das threads que já deram experiencia por
-     * um determinado useer ter dado follow
-     * idUser
-     * idThread
-     */
-    type: Array,
-    default: []
-  },
-  burnedUpvotes: {
-    /**
-     * idUser
-     * idThread
-     * idAnswer
-     * idComment
-     */
-    type: Array,
-    defualt: []
   }
 });
 

@@ -2,6 +2,12 @@ const { User } = require("../models/users.model");
 var nodemailer = require("nodemailer");
 
 let crudUser = {
+  // registerUser(res, user) {
+  //   User.create(user, (err, user) => {
+  //     if (err) throw err
+  //     res.json({ msg: "success", user: user })
+  //   })
+  // },
   findAll(res) {
     User.find({}, (err, collection) => {
       if (err) {

@@ -6,11 +6,11 @@ const threadController = require("../controllers/threads.controller");
 const answerController = require("../controllers/answers.controller");
 const commentController = require("../controllers/comments.controller");
 const tagController = require("../controllers/tags.controller");
-
+const expLogController = require("../controllers/expLog.controller")
 const statisticController = require("../controllers/statistics.controller");
 
 const verifyToken = require("../controllers/auth/VerifyToken");
-router.get("/", function(req, res) {
+router.get("/", function (req, res) {
   // console.log(req);
   res.send("Route para as chamadas à base de dados.");
 });
@@ -25,6 +25,9 @@ router.get("/users/:id", (req, res) => {
   //Função criada no controller
   userController.findByID(res, req.params.id);
 });
+// router.post("/users", (req, res) => {
+//   userController.registerUser(res, req.body.user)
+// })
 router.post("/users/:id/isBurnedUpv", (req, res) => {
   //Working (postman)
   userController.isBurnedUpv(res, req.params.id, req.body.upvote)
@@ -55,8 +58,8 @@ router.delete("/users/:id", verifyToken, (req, res) => {
 });
 
 //Contact Form
-router.post("/contact",(req,res)=>{
-  userController.contact(req,res)
+router.post("/contact", (req, res) => {
+  userController.contact(req, res)
 })
 /**
  * Thread paths
@@ -287,4 +290,12 @@ router.get("/exp", (req, res) => {
 router.get("/topCommentators", (req, res) => {
   statisticController.topCommentator(res);
 });
+
+/* ExpLog */
+router.post("/explog/add", verifyToken, (req, res) => {
+  expLogController.add(res, req.body.expLog)
+})
+router.post("/explog/remove/:id", verifyToken, (req, res) => {
+  expLogController.remove(res, req.params.id)
+})
 module.exports = router;
