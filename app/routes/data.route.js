@@ -25,17 +25,6 @@ router.get("/users/:id", (req, res) => {
   //Função criada no controller
   userController.findByID(res, req.params.id);
 });
-// router.post("/users", (req, res) => {
-//   userController.registerUser(res, req.body.user)
-// })
-router.post("/users/:id/isBurnedUpv", (req, res) => {
-  //Working (postman)
-  userController.isBurnedUpv(res, req.params.id, req.body.upvote)
-})
-router.post("/users/:id/isBurnedFollow", (req, res) => {
-  //Testar
-  userController.isBurnedFollow(res, req.params.id, req.body.follow)
-})
 router.get("/users/userByName/:name", (req, res) => {
   userController.findOneByName(res, req.params.name);
 });
@@ -46,9 +35,18 @@ router.get("/users/userByRank/rankings", (req, res) => {
   userController.findByRank(res);
 });
 
-router.put("/users/changeFollow/:id", (req, res) => {
+router.put("/users/changefollow/:id", verifyToken,(req, res) => {
   userController.changeFollow(res, req.params.id, req.body.follow);
 });
+router.put("/users/addexp/:id", verifyToken, (req, res) => {
+  userController.addExperience(res, req.params.id, req.body.exp)
+})
+router.put("/users/rmexp/:id", verifyToken, (req, res) => {
+  userController.removeExperience(res, req.params.id, req.body.exp)
+})
+router.put("/users/addnotification/:id", (req, res) => {
+  userController.addNotification(res, req.params.id, req.body.notification)
+})
 router.put("/users/:id", verifyToken, (req, res) => {
   console.log(req.body.user);
   userController.updateUser(res, req.params.id, req.body.user);
@@ -215,7 +213,7 @@ router.post("/badges", verifyToken, (req, res) => {
   );
 });
 router.delete("/badges/:id", verifyToken, (req, res) => {
-  badgeController.deleteBadge(res,req.params.id);
+  badgeController.deleteBadge(res, req.params.id);
 });
 
 //Tag.controller

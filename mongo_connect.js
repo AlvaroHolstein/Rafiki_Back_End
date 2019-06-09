@@ -19,5 +19,6 @@ conn.once('open', () => {
 module.exports = {
     conn: conn,
     Schema: mongoose.Schema,
-    Model: mongoose.model
+    Model: mongoose.model,
+    ObjectId: mongoose.ObjectId
 }   

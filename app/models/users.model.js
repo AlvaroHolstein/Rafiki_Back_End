@@ -1,11 +1,28 @@
-const { Schema, Model } = require("../../mongo_connect");
-
+const { Schema, Model, ObjectId } = require("../../mongo_connect");
+console.log(ObjectId)
 /**
  * Propriedades Calculadas:
  *  Rank
  *  Level
  *  Badges
  */
+let userNotifications = Schema({
+  userInfo: {
+    id: Number,
+    name: String
+  },
+  text: {
+    type: String
+  },
+  visto: {
+    type: Boolean,
+    default: false
+  },
+  date: {
+    type: Date,
+    default: Date.now
+  }
+}) 
 const userSchema = Schema({
   id: {
     type: Number
@@ -46,28 +63,27 @@ const userSchema = Schema({
   upvotes: {
     /**
      * idUpvote (_id)
-     * type (th, ans, com)
+     * type (thread, answer, comment)
      */
     type: Array,
-    default: []
+    // default: []
   },
-  notifications: { //Ver melhor
-    /**
-     * id
-     * idUserFirst
-     * text
-     * visto
-     * date
-     */
-    type: Array, //Array com o objecto notificações
-    default: []
-  }
+  /**
+  * id
+  * idUserFirst
+  * text
+  * visto
+  * date
+  */
+  notifications: Array
 });
 
 const User = Model("User", userSchema);
+const Notification = Model("Notification", userNotifications)
 // console.log(User.schema.tree) //Schema do Model
 
 module.exports = {
   User: User,
-  userSchema: userSchema
+  userSchema: userSchema,
+  Notification: Notification
 };

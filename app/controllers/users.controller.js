@@ -1,4 +1,4 @@
-const { User } = require("../models/users.model");
+const { User, Notification } = require("../models/users.model");
 var nodemailer = require("nodemailer");
 
 let crudUser = {
@@ -94,32 +94,47 @@ let crudUser = {
     // console.log(a, 'a')
   },
   changeFollow(res, id, follow) {
-    /**
-     * Usar este método depois de ter os parametros que se envia todos calculados
-     */
     let query = { id: id };
-    console.log(user, "Este é u user no updateUserNoEmail !!!!!!!!!!!!!!!")
-    User.findOneAndUpdate(
+    User.findOne(
       query,
-      {
-        $set: { follow: user.follow }
-      },
-      { useFindAndModify: false, overwrite: true },
-      (err, collection) => {
-        if (err) console.log(err);
-        else {
-          console.log(collection, "a collection");
-          res.json(collection);
+      (err, user) => {
+        if (err) throw err;
+        /** Fazer push do id da thread a seguir pelo user */
+        console.log(user.follow, "Array de followers do usaer " + user.name)
+        /** Esta verificação só vai bser feita mesmo para despistar qualquer erro,´
+         * porque esta verificação também vai ser feita no front-end
+         */
+        for (let i = 0; i < user.follow.length; i++) {
+          if (user.follow[i] == follow) {
+            res.json({ msg: "That thread is already being followed", success: false })
+            return;
+          }
         }
+        user.follow.push(follow)
+        user.save(err => {
+          res.json({ msg: "success", success: true });
+        })
       }
     );
+  },
+  addExperience(res, id, exp) {
+    User.findOneAndUpdate({ id: id }, { $inc: { experience: exp } }, (err, user) => {
+      if (err) throw err;
+      res.json({ msg: `foi adicionada ${exp} de exp ao user ${user.name}`, user: user })
+    })
+  },
+  removeExperience(res, id, exp) {
+    User.findOneAndUpdate({ id: id }, { $inc: { experience: -exp } }, (err, user) => {
+      if (err) throw err;
+      res.json({ mag: `foi removida ${exp} de exp ao user ${user.name}`, user: user })
+    })
   },
   deleteUser(res, id) {
     User.findOneAndRemove({ id: id }, (err, resp) => {
       if (err) throw err;
       console.log("User Deleted");
-      let success=true
-      res.json({success: success})
+      let success = true
+      res.json({ success: success })
     });
   },
   contact(req, res) {
@@ -156,7 +171,19 @@ let crudUser = {
       res.send("Email address is missing")
     }
   },
-  isBurnedUpv(res, id, upvote) {
+  addNotification(res, id, notification) {
+    User.findOne({ id: id }, (err, user) => {
+      Notification.create(notification, (err, noti) => {
+        console.log(noti, "notiiiiiiiiiiiiii")
+        user.notifications.push(noti)
+        user.save(err => {
+          if (err) throw err;
+          res.json({ msg: `Notificação adicionada ao ${user.name}`, success: true })
+        })
+      })
+    })
+  }
+  /*isBurnedUpv(res, id, upvote) {
     let burned = false
     User.findOne({ id: id }, (err, user) => {
       if (err) throw err;
@@ -203,7 +230,7 @@ let crudUser = {
           })
       }
     })
-  }
+  }*/
 };
 
 module.exports = crudUser;
