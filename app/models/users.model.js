@@ -22,7 +22,7 @@ let userNotifications = Schema({
     type: Date,
     default: Date.now
   }
-}) 
+})
 const userSchema = Schema({
   id: {
     type: Number
@@ -50,7 +50,6 @@ const userSchema = Schema({
   },
   follow: {
     type: [Number], // Array com os id's das threads a seguir
-    default: []
   },
   year: {
     type: Number,

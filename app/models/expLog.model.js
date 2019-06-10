@@ -25,6 +25,9 @@ const expLogSchema = Schema({
         name: { type: String },
         rank: { type: String }
     },
+    expValue: {
+        type: Number
+    },
     date: {
         type: Date,
         default: Date.now

@@ -34,7 +34,17 @@ router.get("/users/userByEmail/:email", (req, res) => {
 router.get("/users/userByRank/rankings", (req, res) => {
   userController.findByRank(res);
 });
-/** Meter o veifyToken */
+
+/** Rotas para a página ViewProfile,
+  * Meter o veifyToken em todas estas rotas (em principio),
+  * 
+  */
+router.put("/users/addupvote/:id", (req, res) => {
+  userController.addUpvote(res, req.params.id, req.body.upvote)
+})
+router.put("/users/removeupvote/:id", (req, res) => {
+  userController.removeUpvote(res, req.params.id, req.body.upvote)
+})
 router.put("/users/addfollow/:id", (req, res) => {
   userController.addFollow(res, req.params.id, req.body.follow);
 });
@@ -50,7 +60,11 @@ router.put("/users/rmexp/:id", verifyToken, (req, res) => {
 router.put("/users/addnotification/:id", verifyToken, (req, res) => {
   userController.addNotification(res, req.params.id, req.body.notification)
 })
-router.put("/users/:id", verifyToken, (req, res) => {
+/** Fim das rotas para a página ViewProfile
+ *  (pelo menos)
+ */
+
+ router.put("/users/:id", verifyToken, (req, res) => {
   console.log(req.body.user);
   userController.updateUser(res, req.params.id, req.body.user);
 });
@@ -117,10 +131,10 @@ router.put("/threads/:id/view", (req, res) => {
 });
 
 router.put("/threads/:id/upvote", verifyToken, (req, res) => {
-  threadController.addUpvote(req.params.id);
+  threadController.addUpvote(res, req.params.id);
 });
 router.put("/threads/:id/downvote", verifyToken, (req, res) => {
-  threadController.removeUpvote(req.params.id);
+  threadController.removeUpvote(res, req.params.id);
 });
 
 router.delete("/threads/:id", verifyToken, (req, res) => {

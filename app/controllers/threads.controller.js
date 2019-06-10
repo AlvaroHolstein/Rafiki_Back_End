@@ -229,7 +229,6 @@ let crudThread = {
       return res.status(400).send({ error: "Could not update threads" + err });
     }
   },
-
   //Close Thread
   closeDate(res, id) {
     try {
@@ -260,6 +259,15 @@ let crudThread = {
       return res.status(400).send({ error: "Could not update threads" + err });
     }
   },
+  //Delete Thread
+  deleteThread(res, id) {
+    Thread.findOneAndRemove({ id: id }, function (err, thread) {
+      if (err) throw err;
+      console.log("Thread Deleted");
+      res.json({ msg: "success", data: thread })
+    });
+  },
+  /** Controllers para a página ViewProfile */
   //Add Upvote
   addUpvote(id) {
     try {
