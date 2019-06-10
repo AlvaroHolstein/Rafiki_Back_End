@@ -93,7 +93,7 @@ let crudUser = {
     );
     // console.log(a, 'a')
   },
-  changeFollow(res, id, follow) {
+  addFollow(res, id, follow) {
     let query = { id: id };
     User.findOne(
       query,
@@ -117,16 +117,29 @@ let crudUser = {
       }
     );
   },
+  removeFollow(res, id, follow) {
+    User.findOne({ id: id }, (err, user) => {
+      let existe = true
+      if (err) throw err
+      let index = user.follow.findIndex(fol => fol == follow)
+      if (index != -1) user.follow.splice(index, 1);
+      else existe = false
+      user.save(err => {
+        if (err) res.json({ msg: "Ocorreu um erro a gravar o user", success: false })
+        res.json({ msg: existe ? "Success" : "O user não segue essa thread", success: true, user: user })
+      })
+    })
+  },
   addExperience(res, id, exp) {
     User.findOneAndUpdate({ id: id }, { $inc: { experience: exp } }, (err, user) => {
       if (err) throw err;
-      res.json({ msg: `foi adicionada ${exp} de exp ao user ${user.name}`, user: user })
+      res.json({ msg: `foi adicionada ${exp} de exp ao user ${user.name}`, user: user, success: true })
     })
   },
   removeExperience(res, id, exp) {
     User.findOneAndUpdate({ id: id }, { $inc: { experience: -exp } }, (err, user) => {
       if (err) throw err;
-      res.json({ mag: `foi removida ${exp} de exp ao user ${user.name}`, user: user })
+      res.json({ mag: `foi removida ${exp} de exp ao user ${user.name}`, user: user, success: true })
     })
   },
   deleteUser(res, id) {
@@ -174,6 +187,7 @@ let crudUser = {
   addNotification(res, id, notification) {
     User.findOne({ id: id }, (err, user) => {
       Notification.create(notification, (err, noti) => {
+        if(err) res.json({msg: "Algo correu mal", success: false})
         console.log(noti, "notiiiiiiiiiiiiii")
         user.notifications.push(noti)
         user.save(err => {
@@ -183,54 +197,60 @@ let crudUser = {
       })
     })
   }
-  /*isBurnedUpv(res, id, upvote) {
-    let burned = false
-    User.findOne({ id: id }, (err, user) => {
-      if (err) throw err;
-      console.log(user.burnedUpvotes, "BURNNNNNNNNNNNNNN||!!!!!!!!!!!!")
-      if (user.burnedUpvotes == undefined) user.burnedUpvotes = []
-      for (let upv of user.burnedUpvotes) {
-        if (upv.threadId == upvote.threadId && upv.answerId == upvote.answerId && upv.commentId == upvote.commentId && upv.userId == upvote.userId) {
-          res.json({ msg: "Burned", isBurned: true })
-          burned = true
-          return
-        }
-      }
-      if (!burned) {
-        console.log(upvote)
-        user.burnedUpvotes.push(upvote)
-        User.findOneAndUpdate({ id: id }, { $set: { burnedUpvotes: user.burnedUpvotes } }, { useFindAndModify: false, overwrite: true },
-          (err, newUser) => {
-            if (err) throw err;
-            res.json({ msg: "Not Burned", isBurned: false, userModi: newUser })
-          })
-      }
-    })
-  },
-  isBurnedFollow(res, id, follow) {
-    let burned = false
-    User.findOne({ id: id }, (err, user) => {
-      if (err) throw err;
-      console.log(user.burnedFollow, "Burn FolloW!!!!!!!!!!!!!!!!!!!");
-      if (user.burnedFollow == undefined) user.burnedFollow = []
-      for (let fol of user.burnedFollow) {
-        if (fol.userId == follow.userId && fol.threadId) {
-          res.json({ msg: "Burned", isBurned: true })
-          burned = true
-          return;
-        }
-      }
-      if (!burned) {
-        console.log(follow)
-        user.burnedFollow.push(follow)
-        User.findOneAndUpdate({ id: id }, { $set: { burnedFollow: user.burnedFollow } }, { useFindAndModify: false, overwrite: true },
-          (err, newUser) => {
-            if (err) throw err;
-            res.json({ msg: "Not Burned", isBurned: false, userModi: newUser })
-          })
-      }
-    })
-  }*/
+  /** Fazer um para remover notificaçoes (boa cena para o user) */
 };
-
 module.exports = crudUser;
+
+
+
+
+/*isBurnedUpv(res, id, upvote) {
+  let burned = false
+  User.findOne({ id: id }, (err, user) => {
+    if (err) throw err;
+    console.log(user.burnedUpvotes, "BURNNNNNNNNNNNNNN||!!!!!!!!!!!!")
+    if (user.burnedUpvotes == undefined) user.burnedUpvotes = []
+    for (let upv of user.burnedUpvotes) {
+      if (upv.threadId == upvote.threadId && upv.answerId == upvote.answerId && upv.commentId == upvote.commentId && upv.userId == upvote.userId) {
+        res.json({ msg: "Burned", isBurned: true })
+        burned = true
+        return
+      }
+    }
+    if (!burned) {
+      console.log(upvote)
+      user.burnedUpvotes.push(upvote)
+      User.findOneAndUpdate({ id: id }, { $set: { burnedUpvotes: user.burnedUpvotes } }, { useFindAndModify: false, overwrite: true },
+        (err, newUser) => {
+          if (err) throw err;
+          res.json({ msg: "Not Burned", isBurned: false, userModi: newUser })
+        })
+    }
+  })
+},
+isBurnedFollow(res, id, follow) {
+  let burned = false
+  User.findOne({ id: id }, (err, user) => {
+    if (err) throw err;
+    console.log(user.burnedFollow, "Burn FolloW!!!!!!!!!!!!!!!!!!!");
+    if (user.burnedFollow == undefined) user.burnedFollow = []
+    for (let fol of user.burnedFollow) {
+      if (fol.userId == follow.userId && fol.threadId) {
+        res.json({ msg: "Burned", isBurned: true })
+        burned = true
+        return;
+      }
+    }
+    if (!burned) {
+      console.log(follow)
+      user.burnedFollow.push(follow)
+      User.findOneAndUpdate({ id: id }, { $set: { burnedFollow: user.burnedFollow } }, { useFindAndModify: false, overwrite: true },
+        (err, newUser) => {
+          if (err) throw err;
+          res.json({ msg: "Not Burned", isBurned: false, userModi: newUser })
+        })
+    }
+  })
+}*/
+
+

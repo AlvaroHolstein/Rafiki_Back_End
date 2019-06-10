@@ -34,17 +34,20 @@ router.get("/users/userByEmail/:email", (req, res) => {
 router.get("/users/userByRank/rankings", (req, res) => {
   userController.findByRank(res);
 });
-
-router.put("/users/changefollow/:id", verifyToken,(req, res) => {
-  userController.changeFollow(res, req.params.id, req.body.follow);
+/** Meter o veifyToken */
+router.put("/users/addfollow/:id", (req, res) => {
+  userController.addFollow(res, req.params.id, req.body.follow);
 });
+router.put("/users/removefollow/:id", (req, res) => {
+  userController.removeFollow(res, req.params.id, req.body.follow)
+})
 router.put("/users/addexp/:id", verifyToken, (req, res) => {
   userController.addExperience(res, req.params.id, req.body.exp)
 })
 router.put("/users/rmexp/:id", verifyToken, (req, res) => {
   userController.removeExperience(res, req.params.id, req.body.exp)
 })
-router.put("/users/addnotification/:id", (req, res) => {
+router.put("/users/addnotification/:id", verifyToken, (req, res) => {
   userController.addNotification(res, req.params.id, req.body.notification)
 })
 router.put("/users/:id", verifyToken, (req, res) => {

@@ -248,16 +248,16 @@ let crudThread = {
   },
   follow(res, id) {
     Thread.findOneAndUpdate({ id: id }, { $inc: { follow: 1 } }, (err, thread) => {
-      if (err) res.json(err) /** Aqui fica res.json para mandar o erro, ou é melhor (throw err)????? */
+      if (err) res.json({msg: "Erro ao incrementar follow", success: false}) /** Aqui fica res.json para mandar o erro, ou é melhor (throw err)????? */
       console.log("Add follow")
-      res.json({msg: "success", thread: thread})
+      res.json({msg: "success", success: true, thread: thread})
     })
   },
   unfollow(res, id) {
     Thread.findOneAndUpdate({ id: id }, { $inc: { follow: -1 } }, (err, thread) => {
       if (err) throw err
       console.log("Remove follow")
-      res.json({msg: "success", thread: thread, done: true})
+      res.json({msg: "success", thread: thread, success: true})
     })
   }
 };
