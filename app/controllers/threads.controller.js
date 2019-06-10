@@ -195,14 +195,14 @@ let crudThread = {
   },
 
   //Close Thread
-  closeDate(id) {
+  closeDate(res, id) {
     Thread.findOneAndUpdate({ id: id }, { closeDate: new Date() }, function (
       err,
       thread
     ) {
       if (err) throw err;
       console.log(thread);
-      // res.json({msg: "success", data: thread})
+      res.json({msg: "success", data: thread})
     });
   },
   //Add View
