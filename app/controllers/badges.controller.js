@@ -2,67 +2,79 @@ const { Badge } = require("../models/badges.model");
 
 let crudBadge = {
   findAll(res) {
-    Badge.find({}, (err, collection) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.json(collection);
-      }
-    });
+    try {
+      Badge.find({}, (err, collection) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.json(collection);
+        }
+      });
+    } catch (err) {
+      return res.status(400).send({ error: "Could not find badges" + err });
+    }
   },
 
   addBadge(res, name, goal, desc, category) {
-    let badges = null;
-    let id = 1;
-    Badge.find({}, (err, collection) => {
-      if (err) throw err;
-      badges = collection;
-      //check name
-      let exist = badges.find(badge => name == badge.name);
-      if (!exist) {
-        //get category
+    try {
+      let badges = null;
+      let id = 1;
+      Badge.find({}, (err, collection) => {
+        if (err) throw err;
+        badges = collection;
+        //check name
+        let exist = badges.find(badge => name == badge.name);
+        if (!exist) {
+          //get category
 
-        badges = badges.filter(badge => (category = badge.category));
-        //check goal
-        let existGoal = badges.find(badge => goal == badge.goal);
-        if (!existGoal) {
-          //get last id
-          if (badges.length != 0) {
-            badges.sort(function(a, b) {
-              if (a.id > b.id) return 1;
-              if (a.id < b.id) return -1;
+          badges = badges.filter(badge => (category = badge.category));
+          //check goal
+          let existGoal = badges.find(badge => goal == badge.goal);
+          if (!existGoal) {
+            //get last id
+            if (badges.length != 0) {
+              badges.sort(function(a, b) {
+                if (a.id > b.id) return 1;
+                if (a.id < b.id) return -1;
+              });
+
+              id = badges[badges.length - 1].id + 1;
+            }
+
+            let newBadge = Badge({
+              id: id,
+              name: name,
+              goal: goal,
+              desc: desc,
+              category: category
             });
 
-            id = badges[badges.length - 1].id + 1;
+            newBadge.save(function(err) {
+              if (err) throw err;
+              let success = true;
+              res.json({ success: success });
+              console.log("Badge Added");
+            });
           }
-
-          let newBadge = Badge({
-            id: id,
-            name: name,
-            goal: goal,
-            desc: desc,
-            category: category
-          });
-
-          newBadge.save(function(err) {
-            if (err) throw err;
-            let success=true
-            res.json({success: success})
-            console.log("Badge Added");
-          });
         }
-      }
-    });
+      });
+    } catch (err) {
+      return res.status(400).send({ error: "Could not add badge" + err });
+    }
   },
 
   deleteBadge(res, id) {
-    console.log(id,"id !!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    Badge.findOneAndRemove({ id: id }, function(err) {
-      if (err) throw err;
-      console.log("Badge Deleted");
-      let success=true
-      res.json({success: success})
-    });
+    try {
+      console.log(id, "id !!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      Badge.findOneAndRemove({ id: id }, function(err) {
+        if (err) throw err;
+        console.log("Badge Deleted");
+        let success = true;
+        res.json({ success: success });
+      });
+    } catch (err) {
+      return res.status(400).send({ error: "Could not delete badge" + err });
+    }
   }
 };
 

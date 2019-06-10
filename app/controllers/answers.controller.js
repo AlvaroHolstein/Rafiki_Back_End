@@ -3,39 +3,43 @@ const { Answer } = require("../models/answers.model");
 let crudAnswer = {
   //Add Answer
   addAnswer(res, idThread, answer) {
-    let id = 1;
+    try {
+      let id = 1;
 
-    let answers = [];
+      let answers = [];
 
-    Answer.find({}, (err, collection) => {
-      if (err) throw err;
-      answers = collection;
-
-      if (answers.length != 0) {
-        answers.sort(function(a, b) {
-          if (a.id > b.id) return 1;
-          if (a.id < b.id) return -1;
-        });
-        id = answers[answers.length - 1].id + 1;
-      }
-
-      let newAnswer = Answer({
-        id: id,
-        idThread: idThread,
-        userInfo: {
-          userid: answer.user.id,
-          photo: answer.user.photo,
-          name: answer.user.name,
-          rank: answer.user.rank
-        },
-        answer: answer.answer
-      });
-
-      newAnswer.save(function(err) {
+      Answer.find({}, (err, collection) => {
         if (err) throw err;
-        console.log("Answer Added");
+        answers = collection;
+
+        if (answers.length != 0) {
+          answers.sort(function(a, b) {
+            if (a.id > b.id) return 1;
+            if (a.id < b.id) return -1;
+          });
+          id = answers[answers.length - 1].id + 1;
+        }
+
+        let newAnswer = Answer({
+          id: id,
+          idThread: idThread,
+          userInfo: {
+            userid: answer.user.id,
+            photo: answer.user.photo,
+            name: answer.user.name,
+            rank: answer.user.rank
+          },
+          answer: answer.answer
+        });
+
+        newAnswer.save(function(err) {
+          if (err) throw err;
+          console.log("Answer Added");
+        });
       });
-    });
+    } catch (err) {
+      return res.status(400).send({ error: "Could not add Answer" + err });
+    }
   },
 
   //Get Answers By Thread Id
@@ -49,53 +53,77 @@ let crudAnswer = {
      * o caminho (threads/:id/answers), e assim já devolve
      * todas ans
      */
-    Answer.find({ idThread: id }, function(err, collection) {
-      if (err) throw err;
-      res.json(collection);
-    });
+    try {
+      Answer.find({ idThread: id }, function(err, collection) {
+        if (err) throw err;
+        res.json(collection);
+      });
+    } catch (err) {
+      return res.status(400).send({ error: "Could not find answers" + err });
+    }
   },
   findByUserId(res, id) {
-    Answer.find({ "userInfo.userid": id }, (err, collection) => {
-      if (err) console.log(err, "Erro no findByUserId");
-      res.json(collection);
-    });
+    try {
+      Answer.find({ "userInfo.userid": id }, (err, collection) => {
+        if (err) console.log(err, "Erro no findByUserId");
+        res.json(collection);
+      });
+    } catch (err) {
+      return res.status(400).send({ error: "Could not find answers" + err });
+    }
   },
   //Add Upvote
   answerUpvote(id) {
-    Answer.findOneAndUpdate({ id: id }, { $inc: { upvotes: 1 } }, function(
-      err,
-      answer
-    ) {
-      if (err) throw err;
-      console.log("Upvote Acrescentado", answer);
-    });
+    try {
+      Answer.findOneAndUpdate({ id: id }, { $inc: { upvotes: 1 } }, function(
+        err,
+        answer
+      ) {
+        if (err) throw err;
+        console.log("Upvote Acrescentado", answer);
+      });
+    } catch (err) {
+      return res.status(400).send({ error: "Could not upvote answer" + err });
+    }
   },
 
   //Remove Upvote
   answerDownvote(id) {
-    Answer.findOneAndUpdate({ id: id }, { $inc: { upvotes: -1 } }, function(
-      err,
-      answer
-    ) {
-      if (err) throw err;
-      console.log("Upvote Tirado", answer);
-    });
+    try {
+      Answer.findOneAndUpdate({ id: id }, { $inc: { upvotes: -1 } }, function(
+        err,
+        answer
+      ) {
+        if (err) throw err;
+        console.log("Upvote Tirado", answer);
+      });
+    } catch (err) {
+      return res.status(400).send({ error: "Could not downvote answer" + err });
+    }
   },
   deleteAnswer(id) {
-    Answer.findOneAndRemove({ id: id }, err => {
-      if (err) throw err;
-      else console.log("Answer Deleted");
-    });
+    try {
+      Answer.findOneAndRemove({ id: id }, err => {
+        if (err) throw err;
+        else console.log("Answer Deleted");
+      });
+    } catch (err) {
+      return res.status(400).send({ error: "Could not delete answer" + err });
+    }
   },
   updateUserInfo(user) {
-   Answer.updateMany(
-      { "userInfo.userid": user.userid },
-      { userInfo: user },
-      function(err, answer) {
-        if (err) throw err;
-        console.log(answer);
-      }
-    );
-  },
+    try {
+      Answer.updateMany(
+        { "userInfo.userid": user.userid },
+        { userInfo: user },
+        function(err, answer) {
+          if (err) throw err;
+          console.log(answer);
+        }
+      );
+    } catch (err) {
+      return res.status(400).send({ error: "Could not update answer" + err });
+    }
+  }
 };
 module.exports = crudAnswer;
