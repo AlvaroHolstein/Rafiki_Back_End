@@ -124,7 +124,7 @@ router.put("/threads/:id/unfollow", (req, res) => {
   threadController.unfollow(res, req.params.id);
 });
 router.put("/threads/:id/close", verifyToken, (req, res) => {
-  threadController.closeDate(req.params.id, res);
+  threadController.closeDate(res, req.params.id);
 });
 router.put("/threads/:id/view", (req, res) => {
   threadController.addView(req.params.id);
