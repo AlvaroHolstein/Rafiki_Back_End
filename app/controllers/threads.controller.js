@@ -269,7 +269,7 @@ let crudThread = {
   },
   /** Controllers para a página ViewProfile */
   //Add Upvote
-  addUpvote(id) {
+  addUpvote(res, id) {
     try {
       Thread.findOneAndUpdate({ id: id }, { $inc: { upvotes: 1 } }, function(
         err,
@@ -277,14 +277,14 @@ let crudThread = {
       ) {
         if (err) throw err;
         console.log(thread);
-        // res.json({msg: "success", data: thread})
+        res.json({msg: "success", data: thread, success: true})
       });
     } catch (err) {
       return res.status(400).send({ error: "Could not update threads" + err });
     }
   },
   //Remove Upvote
-  removeUpvote(id) {
+  removeUpvote(res, id) {
     try {
       Thread.findOneAndUpdate({ id: id }, { $inc: { upvotes: -1 } }, function(
         err,
@@ -292,7 +292,7 @@ let crudThread = {
       ) {
         if (err) throw err;
         console.log(thread);
-        // res.json({msg: "success", data: thread})
+        res.json({msg: "success", data: thread, success: true})
       });
     } catch (err) {
       return res.status(400).send({ error: "Could not update threads" + err });

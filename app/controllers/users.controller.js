@@ -224,7 +224,7 @@ let crudUser = {
         (err, user) => {
           if (err) throw err;
           res.json({
-            msg: `foi adicionada ${exp} de exp ao user ${user.name}`,
+            msg: `foi adicionada ${exp} de exp ao user`,
             user: user,
             success: true
           });
@@ -242,7 +242,7 @@ let crudUser = {
         (err, user) => {
           if (err) throw err;
           res.json({
-            mag: `foi removida ${exp} de exp ao user ${user.name}`,
+            msg: `foi removida ${exp} de exp ao user`,
             user: user,
             success: true
           });
@@ -326,33 +326,38 @@ let crudUser = {
   },
 
   addUpvote(res, id, upvote) {
-    User.findOne({ id: id }, (err, user) => {
-      /** Não deve ter mal fazer outra comfimação para ver se o user
-       * já não deu upvote ao que vai dar upvote
-       */
-      if (err) throw err // Porque assim sabemos diferenciar os erros penso eu de que, (bem xD)
-      let insert = true
-      for (let upv of user.upvotes) {
-        if (upv.type == upvote.type && upv.targetId == upvote.targetId) {
-          res.json({ msg: `já deu upvote nesta ${upvote.type}`, success: false })
-          insert = false
-          return;
+    try {
+      User.findOne({ id: id }, (err, user) => {
+        /** Não deve ter mal fazer outra comfimação para ver se o user
+         * já não deu upvote ao que vai dar upvote
+         */
+        if (err) throw err // Porque assim sabemos diferenciar os erros penso eu de que, (bem xD)
+        let insert = true
+        for (let upv of user.upvotes) {
+          if (upv.type == upvote.type && upv.targetId == upvote.targetId) {
+            res.json({ msg: `já deu upvote nesta ${upvote.type}`, success: false })
+            insert = false
+            return;
+          }
         }
-      }
 
-      if (insert) {
-        user.upvotes.push(upvote)
-        user.save(err => {
-          if (err) res.json({ msg: "Ocorreu um erro a gravar o user", success: false })
-          res.json({ msg: "Upvote inserido com sucesso", success: true })
-        })
-      }
-    })
-  },
+        if (insert) {
+          user.upvotes.push(upvote)
+          user.save(err => {
+            if (err) res.json({ msg: "Ocorreu um erro a gravar o user", success: false })
+            res.json({ msg: "Upvote inserido com sucesso", success: true })
+          })
+        }
+      })
+    } catch(err) {
+      console.log(err)
+    }
+},
   removeUpvote(res, id, upvote) {
     User.findOne({ id: id }, (err, user) => {
       if (err) throw err
       let index = user.upvotes.findIndex(upv => {
+        console.log(upvote, upv)
         if (upv.type == upvote.type && upv.targetId == upvote.targetId) {
           return true
         }
@@ -361,7 +366,7 @@ let crudUser = {
       if (index != -1) {
         user.upvotes.splice(index, 1)
         user.save(err => {
-          if (err) res.json({ msg: "Ocorreu um erro ao gravar o user", success: false })
+          if (err) res.json({ msg: "Ocorreu um erro ao gravar o user", success: true })
           res.json({ msg: "Upvote eliminado com sucesso", success: true })
         })
       }

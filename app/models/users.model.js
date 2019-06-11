@@ -43,7 +43,7 @@ const userSchema = Schema({
   description: {
     type: String,
     default: ""
-  },
+  },  
   picture: {
     type: String,
     default: "http://www.coffeebrain.org/wiki/images/9/93/PEOPLE-NoFoto.JPG"

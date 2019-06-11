@@ -6,18 +6,17 @@ function verifyToken(req, res, next) {
     console.log(req.cookies, "cookies verufy token");
     var token = req.headers["x-access-token"];
     console.log("token:", token);
-    if (!token)
+    if (!token) {
       return res
         .status(403)
         .send({ auth: false, message: "No token provided." });
-    jwt.verify(token, secret, function(err, decoded) {
+
+    }
+    jwt.verify(token, secret, function (err, decoded) {
       console.log(process.env.SECRET, "token");
       console.log(err);
       // console.log(decoded, 'decoded')
-      if (err)
-        return res
-          .status(500)
-          .send({ auth: false, message: "Failed to authenticate token." });
+      // if (err)
       // if everything good, save to request for use in other routes
       req.userId = decoded.id;
       console.log(decoded);
@@ -25,7 +24,11 @@ function verifyToken(req, res, next) {
       next();
     });
   } catch (err) {
-    return res.status(400).send({ error: "Could not verify Token" + err });
+    // return res.status(400).send({ error: "Could not verify Token" + err });
+    res
+      .status(500)
+      .send({ auth: false, message: "Failed to authenticate token." });
+    next()
   }
 }
 module.exports = verifyToken;

@@ -41,7 +41,7 @@ router.get("/users/userByRank/rankings", (req, res) => {
   */
 router.put("/users/addupvote/:id", (req, res) => {
   userController.addUpvote(res, req.params.id, req.body.upvote)
-})
+})  
 router.put("/users/removeupvote/:id", (req, res) => {
   userController.removeUpvote(res, req.params.id, req.body.upvote)
 })
@@ -156,13 +156,12 @@ router.get("/threads/:id/answers", (req, res) => {
 }); //Get Answers
 
 router.put("/threads/:id/answers/:idAnswer/upvote", verifyToken, (req, res) => {
-  answerController.answerUpvote(req.params.idAnswer);
+  answerController.answerUpvote(res, req.params.idAnswer);
 });
-router.put(
-  "/threads/:id/answers/:idAnswer/downvote",
+router.put("/threads/:id/answers/:idAnswer/downvote",
   verifyToken,
   (req, res) => {
-    answerController.answerDownvote(req.params.idAnswer);
+    answerController.answerDownvote(res, req.params.idAnswer);
   }
 );
 router.delete("/threads/:id/answers/:idAnswer", verifyToken, (req, res) => {

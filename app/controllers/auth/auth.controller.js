@@ -240,7 +240,8 @@ let Auth = {
   },
   keepLogged(req, res) {
     try {
-      User.find({ id: req.userId }, (err, user) => {
+      console.log(req.userId)
+      User.findById(req.userId, (err, user) => {
         if (err) throw err;
 
         console.log(user, "user no keepLogged controller");

@@ -73,13 +73,14 @@ let crudAnswer = {
     }
   },
   //Add Upvote
-  answerUpvote(id) {
+  answerUpvote(res, id) {
     try {
       Answer.findOneAndUpdate({ id: id }, { $inc: { upvotes: 1 } }, function(
         err,
         answer
       ) {
         if (err) throw err;
+        res.json({msg: "Sucesso a inserir upvote", success: true})
         console.log("Upvote Acrescentado", answer);
       });
     } catch (err) {
@@ -88,13 +89,14 @@ let crudAnswer = {
   },
 
   //Remove Upvote
-  answerDownvote(id) {
+  answerDownvote(res, id) {
     try {
       Answer.findOneAndUpdate({ id: id }, { $inc: { upvotes: -1 } }, function(
         err,
         answer
       ) {
         if (err) throw err;
+        res.json({msg: "Sucesso a remover upvote", success: true})
         console.log("Upvote Tirado", answer);
       });
     } catch (err) {
