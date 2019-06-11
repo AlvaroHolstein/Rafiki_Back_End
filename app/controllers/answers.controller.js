@@ -24,16 +24,17 @@ let crudAnswer = {
           id: id,
           idThread: idThread,
           userInfo: {
-            userid: answer.user.id,
-            photo: answer.user.photo,
-            name: answer.user.name,
-            rank: answer.user.rank
+            userid: answer.userInfo.userid,
+            photo: answer.userInfo.photo,
+            name: answer.userInfo.name,
+            rank: answer.userInfo.rank
           },
           answer: answer.answer
         });
 
         newAnswer.save(function(err) {
           if (err) throw err;
+          res.json({success: true, answer: newAnswer})
           console.log("Answer Added");
         });
       });
@@ -73,7 +74,7 @@ let crudAnswer = {
     }
   },
   //Add Upvote
-  answerUpvote(res, id) {
+    answerUpvote(res, id) {
     try {
       Answer.findOneAndUpdate({ id: id }, { $inc: { upvotes: 1 } }, function(
         err,

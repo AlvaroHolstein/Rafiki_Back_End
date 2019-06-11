@@ -302,29 +302,6 @@ let crudUser = {
       return res.status(400).send({ error: "Could not contact" + err });
     }
   },
-  addNotification(res, id, notification) {
-    try {
-      User.findOne({ id: id }, (err, user) => {
-        Notification.create(notification, (err, noti) => {
-          if (err) res.json({ msg: "Algo correu mal", success: false });
-          console.log(noti, "notiiiiiiiiiiiiii");
-          user.notifications.push(noti);
-          user.save(err => {
-            if (err) throw err;
-            res.json({
-              msg: `Notificação adicionada ao ${user.name}`,
-              success: true
-            });
-          });
-        });
-      });
-    } catch (err) {
-      return res
-        .status(400)
-        .send({ error: "Could not add notification" + err });
-    }
-  },
-
   addUpvote(res, id, upvote) {
     try {
       User.findOne({ id: id }, (err, user) => {
@@ -349,10 +326,10 @@ let crudUser = {
           })
         }
       })
-    } catch(err) {
+    } catch (err) {
       console.log(err)
     }
-},
+  },
   removeUpvote(res, id, upvote) {
     User.findOne({ id: id }, (err, user) => {
       if (err) throw err
@@ -375,7 +352,55 @@ let crudUser = {
       }
     })
   },
+  addNotification(res, id, notification) {
+    try {
+      User.findOne({ id: id }, (err, user) => {
+        Notification.create(notification, (err, noti) => {
+          if (err) res.json({ msg: "Algo correu mal", success: false });
+          console.log(noti, "notiiiiiiiiiiiiii");
+          user.notifications.push(noti);
+          user.save(err => {
+            if (err) throw err;
+            res.json({
+              msg: `Notificação adicionada ao ${user.name}`,
+              success: true
+            });
+          });
+        });
+      });
+    } catch (err) {
+      return res
+        .status(400)
+        .send({ error: "Could not add notification" + err });
+    }
+  },
   /** Fazer um para remover notificaçoes (boa cena para o user) */
+
+  //Fucking Working
+  addMultipleNotifications(res, threadId, notification) {
+    try {
+      User.find({}, (err, users) => {
+        for (let us of users) {
+          if (us.follow.length != 0) {
+            for (let fol of us.follow) {
+              if (fol == threadId) {
+                Notification.create(notification, (err, notifi) => {
+                  if (err) throw err
+                  us.notifications.push(notifi)
+                  us.save(err => {
+                    if(err) throw err
+                  })
+                })
+              }
+            }
+          }
+        }
+        res.json({msg: "done", success: true})
+      })
+    } catch (err) {
+      throw err
+    }
+  }
 };
 module.exports = crudUser;
 

@@ -36,8 +36,7 @@ router.get("/users/userByRank/rankings", (req, res) => {
 });
 
 /** Rotas para a página ViewProfile,
-  * Meter o veifyToken em todas estas rotas (em principio),
-  * 
+  * Meter o verifyToken em todas estas rotas (em principio),
   */
 router.put("/users/addupvote/:id", (req, res) => {
   userController.addUpvote(res, req.params.id, req.body.upvote)
@@ -59,6 +58,12 @@ router.put("/users/rmexp/:id", verifyToken, (req, res) => {
 })
 router.put("/users/addnotification/:id", verifyToken, (req, res) => {
   userController.addNotification(res, req.params.id, req.body.notification)
+})
+router.put("/users/addanswer/multiplenotis", verifyToken, (req, res) => {
+  userController.addMultipleNotifications(res, req.body.threadId, req.body.notification)
+})
+router.put("/users/addcomment/multiplenotis", verifyToken, (req, res) => {
+   
 })
 /** Fim das rotas para a página ViewProfile
  *  (pelo menos)
@@ -193,14 +198,14 @@ router.put(
   "/threads/:id/answers/:idAnswer/comments/:idComment/upvote",
   verifyToken,
   (req, res) => {
-    commentController.commentUpvote(req.params.idComment);
+    commentController.commentUpvote(res, req.params.idComment);
   }
 );
 router.put(
   "/threads/:id/answers/:idAnswer/comments/:idComment/downvote",
   verifyToken,
   (req, res) => {
-    commentController.commentDownvote(req.params.idComment);
+    commentController.commentDownvote(res, req.params.idComment);
   }
 );
 

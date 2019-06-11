@@ -67,7 +67,7 @@ let crudComment = {
   },
 
   //Add Upvote
-  commentUpvote(id) {
+  commentUpvote(res, id) {
     try {
       Comment.findOneAndUpdate({ id: id }, { $inc: { upvotes: 1 } }, function(
         err,
@@ -75,6 +75,7 @@ let crudComment = {
       ) {
         if (err) throw err;
         console.log(answer);
+        res.json({msg: "Upvote adicionado ao comentario", success: true})
       });
     } catch (err) {
       return res.status(400).send({ error: "Could not upvote comment" + err });
@@ -82,14 +83,15 @@ let crudComment = {
   },
 
   //Remove Upvote
-  commentDownvote(id) {
+  commentDownvote(res, id) {
     try {
       Comment.findOneAndUpdate({ id: id }, { $inc: { upvotes: -1 } }, function(
         err,
-        answer
+        answer  
       ) {
         if (err) throw err;
         console.log(answer);
+        res.json({msg: "Upvote removido ao comentario", success: true})
       });
     } catch (err) {
       return res
