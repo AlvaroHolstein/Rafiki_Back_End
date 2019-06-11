@@ -59,7 +59,8 @@ router.put("/users/rmexp/:id", verifyToken, (req, res) => {
 router.put("/users/addnotification/:id", verifyToken, (req, res) => {
   userController.addNotification(res, req.params.id, req.body.notification)
 })
-router.put("/users/addanswer/multiplenotis", verifyToken, (req, res) => {
+//Secalhar tirar o addanswer do uri
+router.put("/users/multiplenotis", verifyToken, (req, res) => {
   userController.addMultipleNotifications(res, req.body.threadId, req.body.notification)
 })
 router.put("/users/addcomment/multiplenotis", verifyToken, (req, res) => {

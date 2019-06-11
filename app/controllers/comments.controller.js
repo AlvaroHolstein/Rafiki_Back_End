@@ -24,16 +24,18 @@ let crudComment = {
           id: id,
           idAnswer: idAnswer,
           userInfo: {
-            userid: comment.user.id,
-            photo: comment.user.photo,
-            name: comment.user.name,
-            rank: comment.user.rank
+            userid: comment.userInfo.userid,
+            photo: comment.userInfo.photo,
+            name: comment.userInfo.name,
+            rank: comment.userInfo.rank
           },
           comment: comment.comment
         });
 
         newComment.save(function(err) {
           if (err) throw err;
+          console.log(newComment)
+          res.json({success: true, comment: newComment})
           console.log("Comment Added");
         });
       });
