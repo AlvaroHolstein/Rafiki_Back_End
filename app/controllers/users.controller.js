@@ -323,6 +323,32 @@ let crudUser = {
       }
     });
   },
+  updateNotification(res, userId, id){
+    try{
+      User.findOne({id:userId}, (err,user) => {
+        if (err) res.json({ msg: "Algo correu mal", success: false });
+        user.notifications.filter(notifica => {
+          if(notifica._id == id)
+          {
+            notifica.visto = true
+          }
+          return true
+
+        })
+
+        res.json({
+          msg: `Notificação alterada do ${user.name}`,
+          success: true
+        });
+      })
+
+    } catch(err){
+      return res
+        .status(400)
+        .send({ error: "Could not update notification" + err });
+
+    }
+  },
   addNotification(res, id, notification) {
     try {
       User.findOne({ id: id }, (err, user) => {
