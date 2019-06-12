@@ -325,7 +325,8 @@ let crudUser = {
   },
   updateNotification(res, userId, id) {
     try {
-      User.findOne({ id: userId }, (err, user) => {
+      /*Try 1
+       User.findOne({ id: userId }, (err, user) => {
         if (err) res.json({ msg: "Algo correu mal", success: false });
         let index = user.notifications.findIndex(
           notification => notification._id == id
@@ -345,9 +346,10 @@ let crudUser = {
             user: user
           });
         });
-      });
+      }); */
 
-      /* User.findOneAndUpdate(
+      /*Try 2
+       User.findOneAndUpdate(
         { id: userId, "notifications._id": id },
         {
           $set: {
@@ -358,7 +360,31 @@ let crudUser = {
           if (err) throw err;
           res.json({ doc: doc });
         }
-      ); */
+      ); 
+      */
+      Notification.findById(id, (err, noti) => {
+        if (err) throw err;
+        noti.visto = true;
+        noti.save();
+        User.findOne({ id: userId }, (err, user) => {
+          if (err) throw err;
+          let index = user.notifications.findIndex(
+            notification => notification._id == id
+          );
+
+          user.notifications.splice(index, 1);
+
+          user.notifications.push(noti);
+          user.save(err => {
+            if (err) throw err;
+            res.json({
+              msg: `Notificação adicionada ao ${user.name}`,
+              success: true,
+              user: user
+            });
+          });
+        });
+      });
     } catch (err) {
       return res
         .status(400)
