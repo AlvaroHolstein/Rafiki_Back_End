@@ -332,13 +332,16 @@ let crudUser = {
           {
             notifica.visto = true
           }
+
           return true
 
         })
-
-        res.json({
-          msg: `Notificação alterada do ${user.name}`,
-          success: true
+        user.save(err => {
+          if (err) throw err;
+          res.json({
+            msg: `Notificação adicionada ao ${user.name}`,
+            success: true
+          });
         });
       })
 
