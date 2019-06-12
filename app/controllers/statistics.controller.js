@@ -30,7 +30,7 @@ let stats = {
         if (err) throw err;
         let upvotesArr = collection.map(thread => thread.upvotes);
 
-        let upvotes = []
+        let upvotes = [];
         if (upvotesArr.length > 0) {
           upvotes = upvotesArr.reduce((total = 0, value, index) =>
             index + 1 <= upvotesArr.length ? (total += value) : 0
@@ -238,8 +238,18 @@ let stats = {
   topCommentator(res) {
     try {
       Answer.find({}, (err, collection) => {
-        if (err) throw err;
-        let topcommentators = collection.map(commentator => {
+        let commentators = [];
+        for (let i = 0; i < collection.length; i++) {
+          if (
+            commentators.findIndex(
+              commentator =>
+                commentator.userInfo.userid == collection[i].userInfo.userid
+            ) == -1
+          ) {
+            commentators.push(collection[i]);
+          }
+        }
+        commentators = commentators.map(commentator => {
           let newObj = {
             id: commentator.userInfo.userid,
             name: commentator.userInfo.name,
@@ -247,39 +257,33 @@ let stats = {
           };
           return newObj;
         });
-        console.log(topcommentators);
-        if (topcommentators.length > 1) {
-          for (let i = 0; i < topcommentators.length; i++) {
+        if (commentators.length > 1) {
+          for (let i = 0; i < commentators.length; i++) {
             for (let j = 0; j < collection.length; j++) {
-              console.log("Que se passa?");
-              console.log("id1", topcommentators[i].id);
-              console.log("id2", collection[j].userInfo.userid);
-              if (topcommentators[i].id == collection[j].userInfo.userid) {
-                topcommentators[i].number += 1;
-                console.log("Devia Atualizar", topcommentators[0].number);
+              if (commentators[i].id == collection[j].userInfo.userid) {
+                commentators[i].number += 1;
+                console.log("Devia Atualizar", commentators[i].number);
               }
             }
           }
-
-          topcommentators = topcommentators.sort((a, b) => {
+          commentators = commentators.sort((a, b) => {
             if (a.number > b.number) return -1;
             if (a.number < b.number) return 1;
             else return 0;
           });
 
-          topcommentators.length = 5;
+          commentators.length = 5;
         } else {
           for (let j = 0; j < collection.length; j++) {
             console.log("id1", topcommentators[0].id);
             console.log("id2", collection[j].userInfo.userid);
-            if (topcommentators[0].id == collection[j].userInfo.userid) {
-              topcommentators[0].number += 1;
-              console.log("Devia Atualizar", topcommentators[0].number);
+            if (commentators[0].id == collection[j].userInfo.userid) {
+              commentators[0].number += 1;
+              console.log("Devia Atualizar", commentators[0].number);
             }
           }
         }
-
-        res.json(topcommentators);
+        res.json(commentators);
       });
     } catch (err) {
       return res
