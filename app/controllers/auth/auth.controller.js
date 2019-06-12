@@ -49,19 +49,36 @@ let Auth = {
                   var token = jwt.sign({ id: user._id }, secret, {
                     expiresIn: "1h" // expires in 1 hour
                   });
+
+                  let sendUser = {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    description: user.description,
+                    notifications: user.notifications,
+                    experience: user.experience,
+                    picture: user.picture,
+                    follow: user.follow,
+                    course: user.course,
+                    year: user.year,
+                    upvotes: user.upvotes
+                  };
+
                   res.cookie("login", token, { maxAge: 9999 });
+                  
                   res.status(200).send({
                     auth: true,
                     token: token,
                     id: user.id,
-                    cookie: "login"
+                    cookie: "login",
+                    user: sendUser
                   });
                 }
               );
-            } else res.send("Password Inválida");
-          } else res.send("email inválido");
+            } else res.json({msg: "Password Inválida", auth: false});
+          } else res.json({msg: "email inválido", auth: false});
         } else {
-          res.send("Name Already Exists");
+          res.json({msg: "Name Already Exists", auth: false});
         }
       });
     } catch (err) {

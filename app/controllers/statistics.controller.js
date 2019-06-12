@@ -30,9 +30,12 @@ let stats = {
         if (err) throw err;
         let upvotesArr = collection.map(thread => thread.upvotes);
 
-        let upvotes = upvotesArr.reduce((total = 0, value, index) =>
-          index + 1 <= upvotesArr.length ? (total += value) : 0
-        );
+        let upvotes = []
+        if (upvotesArr.length > 0) {
+          upvotes = upvotesArr.reduce((total = 0, value, index) =>
+            index + 1 <= upvotesArr.length ? (total += value) : 0
+          );
+        }
         console.log(collection);
         console.log("numero de upvotes", upvotes);
         res.json(upvotes);
