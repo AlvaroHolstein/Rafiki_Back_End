@@ -120,48 +120,6 @@ let crudUser = {
       return res.status(400).send({ error: "Could not update user" + err });
     }
   },
-  deleteUser(res, id) {
-    User.findOneAndRemove({ id: id }, (err, resp) => {
-      if (err) throw err;
-      console.log("User Deleted");
-      let success = true
-      res.json({ success: success })
-    });
-  },
-  contact(req, res) {
-    if (req.body.email !== undefined) {
-      var emailAddres = req.body.email
-      var transporter = nodemailer.createTransport({
-        service: "Gmail",
-        auth: {
-          user: "rafikiteam18.19@gmail.com", //Mail
-          pass: "Rafiki1234!" //Password
-        }
-      });
-      var html = `<p>${req.body.name}</p>
-                <p>${req.body.message}</p>
-      `
-      var options = {
-        from: emailAddres,
-        to: "rafikiteam18.19@gmail.com",
-        subject: req.body.subject,
-        html: html
-      }
-      transporter.sendMail(options, function (err, info) {
-        if (err) {
-          console.log(err)
-          res.json({ yo: "error" })
-        } else {
-          console.log("Message sent" + info.response)
-          res.json({ yo: info.response })
-        }
-      })
-
-      res.send(`<p>Mail Sent Subject:${req.body.subject}</p>`)
-    } else {
-      res.send("Email address is missing")
-    }
-  },
   /** Controllers para a página ViewProfile */
   addFollow(res, id, follow) {
     try {
@@ -284,7 +242,7 @@ let crudUser = {
           subject: req.body.subject,
           html: html
         };
-        transporter.sendMail(options, function (err, info) {
+        transporter.sendMail(options, function(err, info) {
           if (err) {
             console.log(err);
             res.json({ yo: "error" });
@@ -308,49 +266,62 @@ let crudUser = {
         /** Não deve ter mal fazer outra comfimação para ver se o user
          * já não deu upvote ao que vai dar upvote
          */
-        if (err) throw err // Porque assim sabemos diferenciar os erros penso eu de que, (bem xD)
-        let insert = true
+        if (err) throw err; // Porque assim sabemos diferenciar os erros penso eu de que, (bem xD)
+        let insert = true;
         for (let upv of user.upvotes) {
           if (upv.type == upvote.type && upv.targetId == upvote.targetId) {
-            res.json({ msg: `já deu upvote nesta ${upvote.type}`, success: false })
-            insert = false
+            res.json({
+              msg: `já deu upvote nesta ${upvote.type}`,
+              success: false
+            });
+            insert = false;
             return;
           }
         }
 
         if (insert) {
-          user.upvotes.push(upvote)
+          user.upvotes.push(upvote);
           user.save(err => {
-            if (err) res.json({ msg: "Ocorreu um erro a gravar o user", success: false })
-            res.json({ msg: "Upvote inserido com sucesso", success: true })
-          })
+            if (err)
+              res.json({
+                msg: "Ocorreu um erro a gravar o user",
+                success: false
+              });
+            res.json({ msg: "Upvote inserido com sucesso", success: true });
+          });
         }
-      })
+      });
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
   },
   removeUpvote(res, id, upvote) {
     User.findOne({ id: id }, (err, user) => {
-      if (err) throw err
+      if (err) throw err;
       let index = user.upvotes.findIndex(upv => {
-        console.log(upvote, upv)
+        console.log(upvote, upv);
         if (upv.type == upvote.type && upv.targetId == upvote.targetId) {
-          return true
+          return true;
         }
-        return false
-      })
+        return false;
+      });
       if (index != -1) {
-        user.upvotes.splice(index, 1)
+        user.upvotes.splice(index, 1);
         user.save(err => {
-          if (err) res.json({ msg: "Ocorreu um erro ao gravar o user", success: true })
-          res.json({ msg: "Upvote eliminado com sucesso", success: true })
-        })
+          if (err)
+            res.json({
+              msg: "Ocorreu um erro ao gravar o user",
+              success: true
+            });
+          res.json({ msg: "Upvote eliminado com sucesso", success: true });
+        });
+      } else {
+        res.json({
+          msg: `O user ainda não deu upvote nesta ${upvote.type}`,
+          success: false
+        });
       }
-      else {
-        res.json({ msg: `O user ainda não deu upvote nesta ${upvote.type}`, success: false })
-      }
-    })
+    });
   },
   addNotification(res, id, notification) {
     try {
@@ -385,20 +356,20 @@ let crudUser = {
             for (let fol of us.follow) {
               if (fol == threadId) {
                 Notification.create(notification, (err, notifi) => {
-                  if (err) throw err
-                  us.notifications.push(notifi)
+                  if (err) throw err;
+                  us.notifications.push(notifi);
                   us.save(err => {
-                    if(err) throw err
-                  })
-                })
+                    if (err) throw err;
+                  });
+                });
               }
             }
           }
         }
-        res.json({msg: "done", success: true})
-      })
+        res.json({ msg: "done", success: true });
+      });
     } catch (err) {
-      throw err
+      throw err;
     }
   }
 };
