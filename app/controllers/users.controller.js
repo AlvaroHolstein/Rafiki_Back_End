@@ -327,7 +327,7 @@ let crudUser = {
     try {
       User.findOne({ id: userId }, (err, user) => {
         if (err) res.json({ msg: "Algo correu mal", success: false });
-        /*  let index = user.notifications.findIndex(
+        let index = user.notifications.findIndex(
           notification => notification._id == id
         );
         console.log(index, "INDEX");
@@ -335,33 +335,30 @@ let crudUser = {
           user.notifications[index].visto = true;
           console.log(user.notifications, "Notifications");
         }
-        console.log(user); */
-        Notification.findByIdAndUpdate(id, { visto: true }, (err, noti) => {
-          let index = user.notifications.findIndex(
-            notification => notification._id == id
-          );
-          if (index != -1) {
-            user.notifications[index] = noti;
-            console.log(user.notifications, "Notifications");
-          }
-          user.save(err => {
-            if (err) throw err;
-            res.json({
-              msg: `Notificação adicionada ao ${user.name}`,
-              success: true,
-              user: user
-            });
-          });
-        });
-        /* user.save(err => {
+        console.log(user);
+
+        user.save(err => {
           if (err) throw err;
           res.json({
             msg: `Notificação adicionada ao ${user.name}`,
             success: true,
             user: user
           });
-        }); */
+        });
       });
+
+      /* User.findOneAndUpdate(
+        { id: userId, "notifications._id": id },
+        {
+          $set: {
+            "notifications.$.visto": true
+          }
+        },
+        (err, doc) => {
+          if (err) throw err;
+          res.json({ doc: doc });
+        }
+      ); */
     } catch (err) {
       return res
         .status(400)
