@@ -323,19 +323,19 @@ let crudUser = {
       }
     });
   },
-  updateNotification(res, userId, id){
-    try{
-      User.findOne({id:userId}, (err,user) => {
+  updateNotification(res, userId, id) {
+    try {
+      User.findOne({ id: userId }, (err, user) => {
         if (err) res.json({ msg: "Algo correu mal", success: false });
-        user.notifications.filter(notifica => {
-          if(notifica._id == id)
-          {
-            notifica.visto = true
-          }
-
-          return true
-
-        })
+        let index = user.notifications.findIndex(
+          notification => notification._id == id
+        );
+        console.log(index, "INDEX");
+        if (index != -1) {
+          user.notifications[index].visto = true;
+          console.log(user.notifications, "Notifications");
+        }
+        console.log(user);
         user.save(err => {
           if (err) throw err;
           res.json({
@@ -343,13 +343,11 @@ let crudUser = {
             success: true
           });
         });
-      })
-
-    } catch(err){
+      });
+    } catch (err) {
       return res
         .status(400)
         .send({ error: "Could not update notification" + err });
-
     }
   },
   addNotification(res, id, notification) {
