@@ -356,14 +356,18 @@ let crudUser = {
     try {
       User.findOne({ id: id }, (err, user) => {
         if (err) throw err;
-        let notifications = user.notifications.sort((a, b) => {
-          if (a.id > b.id) return 1;
-          if (a.id < b.id) return -1;
-          else return 0;
-        });
-        let id = notifications[notifications.length - 1].id + 1;
-        notification.id = id;
-        if (!id) id = 1;
+        if (user.notifications.length != 0) {
+          let notifications = user.notifications.sort((a, b) => {
+            if (a.id > b.id) return 1;
+            if (a.id < b.id) return -1;
+            else return 0;
+          });
+          let id = notifications[notifications.length - 1].id + 1;
+          notification.id = id;
+        } else {
+          notification.id = 1;
+        }
+
         user.notifications.push(notification);
         user.save(err => {
           if (err) throw err;
