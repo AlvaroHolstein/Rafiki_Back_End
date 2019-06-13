@@ -6,23 +6,6 @@ console.log(ObjectId)
  *  Level
  *  Badges
  */
-let userNotifications = Schema({
-  userInfo: {
-    id: Number,
-    name: String
-  },
-  text: {
-    type: String
-  },
-  visto: {
-    type: Boolean,
-    default: false
-  },
-  date: {
-    type: Date,
-    default: Date.now
-  }
-})
 const userSchema = Schema({
   id: {
     type: Number
@@ -78,11 +61,9 @@ const userSchema = Schema({
 });
 
 const User = Model("User", userSchema);
-const Notification = Model("Notification", userNotifications)
 // console.log(User.schema.tree) //Schema do Model
 
 module.exports = {
   User: User,
   userSchema: userSchema,
-  Notification: Notification
 };

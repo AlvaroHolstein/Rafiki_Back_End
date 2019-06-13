@@ -242,7 +242,7 @@ let crudUser = {
           subject: req.body.subject,
           html: html
         };
-        transporter.sendMail(options, function(err, info) {
+        transporter.sendMail(options, function (err, info) {
           if (err) {
             console.log(err);
             res.json({ yo: "error" });
@@ -325,8 +325,7 @@ let crudUser = {
   },
   updateNotification(res, userId, id) {
     try {
-      /*Try 1
-       User.findOne({ id: userId }, (err, user) => {
+      User.findOne({ id: userId }, (err, user) => {
         if (err) res.json({ msg: "Algo correu mal", success: false });
         let index = user.notifications.findIndex(
           notification => notification._id == id
@@ -346,44 +345,6 @@ let crudUser = {
             user: user
           });
         });
-      }); */
-
-      /*Try 2
-       User.findOneAndUpdate(
-        { id: userId, "notifications._id": id },
-        {
-          $set: {
-            "notifications.$.visto": true
-          }
-        },
-        (err, doc) => {
-          if (err) throw err;
-          res.json({ doc: doc });
-        }
-      ); 
-      */
-      Notification.findById(id, (err, noti) => {
-        if (err) throw err;
-        noti.visto = true;
-        noti.save();
-        User.findOne({ id: userId }, (err, user) => {
-          if (err) throw err;
-          let index = user.notifications.findIndex(
-            notification => notification._id == id
-          );
-
-          user.notifications.splice(index, 1);
-
-          user.notifications.push(noti);
-          user.save(err => {
-            if (err) throw err;
-            res.json({
-              msg: `Notificação adicionada ao ${user.name}`,
-              success: true,
-              user: user
-            });
-          });
-        });
       });
     } catch (err) {
       return res
@@ -394,19 +355,19 @@ let crudUser = {
   addNotification(res, id, notification) {
     try {
       User.findOne({ id: id }, (err, user) => {
-        Notification.create(notification, (err, noti) => {
-          if (err) res.json({ msg: "Algo correu mal", success: false });
-          console.log(noti, "notiiiiiiiiiiiiii");
-          user.notifications.push(noti);
-          user.save(err => {
-            if (err) throw err;
-            res.json({
-              msg: `Notificação adicionada ao ${user.name}`,
-              success: true
-            });
+        if (err) throw err
+        let id = user.notifications.length == 0 ? 1 : user.notifications[user.notifications.length - 1].id + 1
+        notification.id = id
+        if(!id) id = 1
+        user.notifications.push(notification);
+        user.save(err => {
+          if (err) throw err;
+          res.json({
+            msg: `Notificação adicionada ao ${user.name}`,
+            success: true
           });
         });
-      });
+      })
     } catch (err) {
       return res
         .status(400)
@@ -423,12 +384,14 @@ let crudUser = {
           if (us.follow.length != 0) {
             for (let fol of us.follow) {
               if (fol == threadId) {
-                Notification.create(notification, (err, notifi) => {
+                let id = us.notifications.length == 0 ? 1 : us.notifications[us.notifications.length - 1].id + 1
+                console.log(id, "ID!!!!!!!!!!!!!!!1")
+                if(!id) id = 1
+                notification.id = id
+                console.log(notification, "LALALALALALALALALALALALALA")
+                us.notifications.push(notification);
+                us.save(err => {
                   if (err) throw err;
-                  us.notifications.push(notifi);
-                  us.save(err => {
-                    if (err) throw err;
-                  });
                 });
               }
             }
@@ -439,6 +402,27 @@ let crudUser = {
     } catch (err) {
       throw err;
     }
+  },
+  deleteNotification(res, id, notiId) {
+    User.find({id: id}, (err, user) => {
+      let index = user.notification.findIndex(not => {
+        if(not.id != undefined) {
+          not.id == notId
+          return true
+        }
+        return false
+      })
+      if(index != -1) {
+        user.notifications.splice(index, 1),
+        user.save(err => {
+          if(err) throw err
+          res.json({msg: "Boa", success: true})
+        })
+      }
+      else {
+        res.json({msg: "Notificação não encontrada", success: false})
+      }
+    })
   }
 };
 module.exports = crudUser;
