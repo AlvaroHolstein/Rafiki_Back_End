@@ -242,7 +242,7 @@ let crudUser = {
           subject: req.body.subject,
           html: html
         };
-        transporter.sendMail(options, function(err, info) {
+        transporter.sendMail(options, function (err, info) {
           if (err) {
             console.log(err);
             res.json({ yo: "error" });
@@ -420,27 +420,32 @@ let crudUser = {
       throw err;
     }
   },
-  deleteNotification(res, id, notiId) {
+  deleteNotification(res, id, notifications) {
+   
     User.find({ id: id }, (err, user) => {
-      let index = user.notification.findIndex(not => {
-        if (not.id != undefined) {
-          not.id == notId;
-          return true;
+      if(err) throw err;
+      console.log(user.notifications, "OAOAOAOAOAOAOAOAO")
+      for (let notification of notifications) {
+        let index = user.notifications.findIndex(not => {
+          if (not.id != undefined) {
+            not.id == notification;
+            return true;
+          }
+          return false;
+        });
+        if (index != -1) {
+          user.notifications.splice(index, 1)
         }
-        return false;
-      });
-      if (index != -1) {
-        user.notifications.splice(index, 1),
-          user.save(err => {
-            if (err) throw err;
-            res.json({ msg: "Boa", success: true });
-          });
-      } else {
-        res.json({ msg: "Notificação não encontrada", success: false });
       }
-    });
+
+      user.save(err => {
+        if (err) throw err;
+        res.json({ msg: "Boa", success: true });
+      });
+    })
   }
 };
+
 module.exports = crudUser;
 
 /*isBurnedUpv(res, id, upvote) {

@@ -63,7 +63,7 @@ router.put("/users/removeNotification/:id", verifyToken, (req, res) => {
   userController.deleteNotification(
     res,
     req.params.id,
-    req.body.notificationId
+    req.body.notifications
   );
 });
 
