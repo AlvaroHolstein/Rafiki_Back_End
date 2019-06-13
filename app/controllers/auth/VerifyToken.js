@@ -3,16 +3,15 @@ var cookieParser = require("cookie-parser");
 const secret = process.env.SECRET;
 function verifyToken(req, res, next) {
   try {
-    console.log(req.cookies, "cookies verufy token");
+    console.log(req.headers["x-access-token"], "HEADERS VERIFY TOKEN TRYYYYYY");
     var token = req.headers["x-access-token"];
     console.log("token:", token);
     if (!token) {
       return res
         .status(403)
         .send({ auth: false, message: "No token provided." });
-
     }
-    jwt.verify(token, secret, function (err, decoded) {
+    jwt.verify(token, secret, function(err, decoded) {
       console.log(process.env.SECRET, "token");
       console.log(err);
       // console.log(decoded, 'decoded')
@@ -28,7 +27,7 @@ function verifyToken(req, res, next) {
     res
       .status(500)
       .send({ auth: false, message: "Failed to authenticate token." });
-    next()
+    next();
   }
 }
 module.exports = verifyToken;

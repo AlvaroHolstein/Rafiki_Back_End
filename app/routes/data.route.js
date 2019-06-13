@@ -6,11 +6,11 @@ const threadController = require("../controllers/threads.controller");
 const answerController = require("../controllers/answers.controller");
 const commentController = require("../controllers/comments.controller");
 const tagController = require("../controllers/tags.controller");
-const expLogController = require("../controllers/expLog.controller")
+const expLogController = require("../controllers/expLog.controller");
 const statisticController = require("../controllers/statistics.controller");
 
 const verifyToken = require("../controllers/auth/VerifyToken");
-router.get("/", function (req, res) {
+router.get("/", function(req, res) {
   // console.log(req);
   res.send("Route para as chamadas à base de dados.");
 });
@@ -36,48 +36,55 @@ router.get("/users/userByRank/rankings", (req, res) => {
 });
 
 /** Rotas para a página ViewProfile,
-  * Meter o verifyToken em todas estas rotas (em principio),
-  */
+ * Meter o verifyToken em todas estas rotas (em principio),
+ */
 router.put("/users/addupvote/:id", (req, res) => {
-  userController.addUpvote(res, req.params.id, req.body.upvote)
-})  
+  userController.addUpvote(res, req.params.id, req.body.upvote);
+});
 router.put("/users/removeupvote/:id", (req, res) => {
-  userController.removeUpvote(res, req.params.id, req.body.upvote)
-})
+  userController.removeUpvote(res, req.params.id, req.body.upvote);
+});
 router.put("/users/addfollow/:id", (req, res) => {
   userController.addFollow(res, req.params.id, req.body.follow);
 });
 router.put("/users/removefollow/:id", (req, res) => {
-  userController.removeFollow(res, req.params.id, req.body.follow)
-})
+  userController.removeFollow(res, req.params.id, req.body.follow);
+});
 router.put("/users/addexp/:id", verifyToken, (req, res) => {
-  userController.addExperience(res, req.params.id, req.body.exp)
-})
+  userController.addExperience(res, req.params.id, req.body.exp);
+});
 router.put("/users/rmexp/:id", verifyToken, (req, res) => {
-  userController.removeExperience(res, req.params.id, req.body.exp)
-})
+  userController.removeExperience(res, req.params.id, req.body.exp);
+});
 router.put("/users/addnotification/:id", verifyToken, (req, res) => {
-  userController.addNotification(res, req.params.id, req.body.notification)
-})
+  userController.addNotification(res, req.params.id, req.body.notification);
+});
 router.put("/users/removeNotification/:id", verifyToken, (req, res) => {
-  userController.deleteNotification(res, req.params.id, req.body.notificationId)
-})
+  userController.deleteNotification(
+    res,
+    req.params.id,
+    req.body.notificationId
+  );
+});
 
-router.put("/users/:userId/updatenotification/:id", verifyToken, (req,res) => {
-  userController.updateNotification(res,req.params.userId, req.params.id)
-})
+router.put("/users/:userId/updatenotification/:id", verifyToken, (req, res) => {
+  console.log(req.headers, "Headers");
+  userController.updateNotification(res, req.params.userId, req.params.id);
+});
 //Secalhar tirar o addanswer do uri
 router.put("/users/multiplenotis", verifyToken, (req, res) => {
-  userController.addMultipleNotifications(res, req.body.threadId, req.body.notification)
-})
-router.put("/users/addcomment/multiplenotis", verifyToken, (req, res) => {
-   
-})
+  userController.addMultipleNotifications(
+    res,
+    req.body.threadId,
+    req.body.notification
+  );
+});
+router.put("/users/addcomment/multiplenotis", verifyToken, (req, res) => {});
 /** Fim das rotas para a página ViewProfile
  *  (pelo menos)
  */
 
- router.put("/users/:id", verifyToken, (req, res) => {
+router.put("/users/:id", verifyToken, (req, res) => {
   console.log(req.body.user);
   userController.updateUser(res, req.params.id, req.body.user);
 });
@@ -87,8 +94,8 @@ router.delete("/users/:id", verifyToken, (req, res) => {
 
 //Contact Form
 router.post("/contact", (req, res) => {
-  userController.contact(req, res)
-})
+  userController.contact(req, res);
+});
 /**
  * Thread paths
  */
@@ -171,7 +178,8 @@ router.get("/threads/:id/answers", (req, res) => {
 router.put("/threads/:id/answers/:idAnswer/upvote", verifyToken, (req, res) => {
   answerController.answerUpvote(res, req.params.idAnswer);
 });
-router.put("/threads/:id/answers/:idAnswer/downvote",
+router.put(
+  "/threads/:id/answers/:idAnswer/downvote",
   verifyToken,
   (req, res) => {
     answerController.answerDownvote(res, req.params.idAnswer);
@@ -320,9 +328,9 @@ router.get("/topCommentators", (req, res) => {
 
 /* ExpLog */
 router.post("/explog/add", verifyToken, (req, res) => {
-  expLogController.add(res, req.body.expLog)
-})
+  expLogController.add(res, req.body.expLog);
+});
 router.post("/explog/remove/:id", verifyToken, (req, res) => {
-  expLogController.remove(res, req.params.id)
-})
+  expLogController.remove(res, req.params.id);
+});
 module.exports = router;

@@ -326,17 +326,21 @@ let crudUser = {
   updateNotification(res, userId, id) {
     try {
       User.findOne({ id: userId }, (err, user) => {
+        console.log(user, "USEEEEER");
         if (err) res.json({ msg: "Algo correu mal", success: false });
+        let noti = null;
         let index = user.notifications.findIndex(
-          notification => notification._id == id
+          notification => notification.id == id
         );
         console.log(index, "INDEX");
         if (index != -1) {
-          user.notifications[index].visto = true;
+          noti = user.notifications[index];
+          noti.visto = true;
           console.log(user.notifications, "Notifications");
         }
-        console.log(user);
-
+        console.log(user, "LINHA 339");
+        user.notifications.splice(index, 1);
+        user.notifications.push(noti);
         user.save(err => {
           if (err) throw err;
           res.json({
@@ -356,6 +360,7 @@ let crudUser = {
     try {
       User.findOne({ id: id }, (err, user) => {
         if (err) throw err;
+        console.log(user, "USEEEEEEEER");
         if (user.notifications.length != 0) {
           let notifications = user.notifications.sort((a, b) => {
             if (a.id > b.id) return 1;
