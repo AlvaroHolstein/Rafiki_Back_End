@@ -19,8 +19,10 @@ app.use(
   )
 );
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+console.log(bodyParser.urlencoded, "Max Size Body Parser");
 
 // app.set('trust proxy', '1'); Ques esto ????????
 // app.use(cookieParser())
@@ -52,8 +54,8 @@ app.use(
     next();
   },
   (req, res, next) => {
-    console.log(req.cookies, "COOKIES")
-    next()
+    console.log(req.cookies, "COOKIES");
+    next();
   }
 );
 
