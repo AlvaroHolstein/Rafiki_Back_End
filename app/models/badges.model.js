@@ -15,8 +15,11 @@ const badgeSchema = Schema ({
     },
     category: {
         type: String
+    },
+    specific: {
+        type: String,
+        default: ""
     }
-
 });
 
 const Badge = Model("Badge", badgeSchema)
