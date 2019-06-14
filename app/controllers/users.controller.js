@@ -83,36 +83,24 @@ let crudUser = {
       return res.status(400).send({ error: "Could not find users" + err });
     }
   },
-  updateUser(res, id, user) {
+  updateUser(res, id, updateuser) {
     try {
       //Encontrar user e atualizar
       //Deve vir um novo objecto user e faz se overwrite do user atual
       //Vai ser assim que se vai fazer o update do follow e das notificações
       let query = { id: id };
       console.log(user, "Este é u user no updateUser !!!!!!!!!!!!!!!");
-      User.findOneAndUpdate(
+      User.findOne(
         query,
-        {
-          $set: {
-            name: user.name,
-            follow: user.follow,
-            upvotes: user.upvotes,
-            notifications: user.notifications,
-            // email: user.email, Por agora so se estaria a por o email a null
-            experience: user.experience,
-            picture: user.picture,
-            year: user.year,
-            course: user.course,
-            description: user.description
-          }
-        },
-        { useFindAndModify: false, new: true, overwrite: true },
-        (err, collection) => {
-          if (err) console.log(err);
-          else {
-            console.log(collection, "a collection");
-            res.json(collection);
-          }
+        (err, user) => {
+          if (err) throw err;
+           user.name=updateuser.name
+           user.picture=updateuser.picture
+           user.year=updateuser.year
+           user.course=updateuser.course
+           user.description=updateuser.description
+          console.log(user)
+           user.save()
         }
       );
       // console.log(a, 'a')
