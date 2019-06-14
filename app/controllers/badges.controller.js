@@ -16,7 +16,7 @@ let crudBadge = {
     }
   },
 
-  addBadge(res, name, goal, desc, category) {
+  addBadge(res, name, goal, desc, category, specific) {
     try {
       let badges = null;
       let id = 1;
@@ -47,13 +47,14 @@ let crudBadge = {
               name: name,
               goal: goal,
               desc: desc,
-              category: category
+              category: category,
+              specific: specific
             });
 
             newBadge.save(function(err) {
               if (err) throw err;
               let success = true;
-              res.json({ success: success });
+              res.json({ success: success, badge:newBadge });
               console.log("Badge Added");
             });
           }

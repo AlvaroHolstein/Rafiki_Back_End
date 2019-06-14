@@ -246,7 +246,8 @@ router.post("/badges", verifyToken, (req, res) => {
     req.body.name,
     req.body.goal,
     req.body.desc,
-    req.body.category
+    req.body.category,
+    req.body.specific
   );
 });
 router.delete("/badges/:id", verifyToken, (req, res) => {
