@@ -94,13 +94,16 @@ let crudUser = {
         query,
         (err, user) => {
           if (err) throw err;
-           user.name=updateuser.name
-           user.picture=updateuser.picture
-           user.year=updateuser.year
-           user.course=updateuser.course
-           user.description=updateuser.description
-          console.log(user,"AAAAA")
-           user.save()
+          user.name = updateuser.name
+          user.picture = updateuser.picture
+          user.year = updateuser.year
+          user.course = updateuser.course
+          user.description = updateuser.description
+          console.log(user, "AAAAA")
+          user.save(err => {
+            if(err) throw err
+            res.json({msg: "Bem updatado", success: true})
+          })
         }
       );
       // console.log(a, 'a')
@@ -409,9 +412,9 @@ let crudUser = {
     }
   },
   deleteNotification(res, id, notificas) {
-   
+
     User.findOne({ id: id }, (err, user) => {
-      if(err) throw err;
+      if (err) throw err;
       console.log(user.notifications, "OAOAOAOAOAOAOAOAO")
       for (let notification of notificas) {
         let index = user.notifications.findIndex(not => {
