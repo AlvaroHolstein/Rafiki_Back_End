@@ -89,7 +89,7 @@ let crudUser = {
       //Deve vir um novo objecto user e faz se overwrite do user atual
       //Vai ser assim que se vai fazer o update do follow e das notificações
       let query = { id: id };
-      console.log(user, "Este é u user no updateUser !!!!!!!!!!!!!!!");
+      console.log(updateuser, "Este é u user no updateUser !!!!!!!!!!!!!!!");
       User.findOne(
         query,
         (err, user) => {
@@ -99,7 +99,7 @@ let crudUser = {
            user.year=updateuser.year
            user.course=updateuser.course
            user.description=updateuser.description
-          console.log(user)
+          console.log(user,"AAAAA")
            user.save()
         }
       );

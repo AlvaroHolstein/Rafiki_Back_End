@@ -85,7 +85,7 @@ router.put("/users/addcomment/multiplenotis", verifyToken, (req, res) => {});
  */
 
 router.put("/users/:id", verifyToken, (req, res) => {
-  console.log(req.body.user);
+  console.log(req.body.user,"USER RECEBIDO");
   userController.updateUser(res, req.params.id, req.body.user);
 });
 router.delete("/users/:id", verifyToken, (req, res) => {
