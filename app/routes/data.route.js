@@ -59,7 +59,7 @@ router.put("/users/rmexp/:id", verifyToken, (req, res) => {
 router.put("/users/addnotification/:id", verifyToken, (req, res) => {
   userController.addNotification(res, req.params.id, req.body.notification);
 });
-router.put("/users/removeNotification/:id", verifyToken, (req, res) => {
+router.put("/users/removenotification/:id", verifyToken, (req, res) => {
   userController.deleteNotification(
     res,
     req.params.id,

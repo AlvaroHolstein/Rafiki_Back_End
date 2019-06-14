@@ -420,12 +420,12 @@ let crudUser = {
       throw err;
     }
   },
-  deleteNotification(res, id, notifications) {
+  deleteNotification(res, id, notificas) {
    
-    User.find({ id: id }, (err, user) => {
+    User.findOne({ id: id }, (err, user) => {
       if(err) throw err;
       console.log(user.notifications, "OAOAOAOAOAOAOAOAO")
-      for (let notification of notifications) {
+      for (let notification of notificas) {
         let index = user.notifications.findIndex(not => {
           if (not.id != undefined) {
             not.id == notification;
