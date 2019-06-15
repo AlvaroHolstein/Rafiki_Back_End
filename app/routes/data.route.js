@@ -11,7 +11,6 @@ const statisticController = require("../controllers/statistics.controller");
 
 const verifyToken = require("../controllers/auth/VerifyToken");
 router.get("/", function(req, res) {
-  // console.log(req);
   res.send("Route para as chamadas à base de dados.");
 });
 /**
@@ -35,6 +34,9 @@ router.get("/users/userByRank/rankings", (req, res) => {
   userController.findByRank(res);
 });
 
+router.put("/users/updateuserinfo/:id", (req, res) => {
+  userController.updateUserInfoLitl(res, req.params.id, req.body.info)
+})
 /** Rotas para a página ViewProfile,
  * Meter o verifyToken em todas estas rotas (em principio),
  */

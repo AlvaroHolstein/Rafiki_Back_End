@@ -1,4 +1,8 @@
-const { User, Notification } = require("../models/users.model");
+const { User } = require("../models/users.model");
+const { Thread } = require("../models/threads.model");
+const { Answer } = require("../models/answers.model");
+const { Comment } = require("../models/comments.model");
+
 var nodemailer = require("nodemailer");
 
 let crudUser = {
@@ -101,8 +105,8 @@ let crudUser = {
           user.description = updateuser.description
           console.log(user, "AAAAA")
           user.save(err => {
-            if(err) throw err
-            res.json({msg: "Bem updatado", success: true})
+            if (err) throw err
+            res.json({ msg: "Bem updatado", success: true })
           })
         }
       );
@@ -434,6 +438,77 @@ let crudUser = {
         res.json({ msg: "Boa", success: true });
       });
     })
+  },
+  updateUserInfoLitl(res, userid, info) {
+    async function update() {
+      try {
+        /** TEstar calarho */
+        /** Update userInfo nas threads */
+        await Thread.find({ 'userInfo.userid': userid }, (err, collection) => {
+          if (err) throw err;
+          for (let i = 0; i < collection.length; i++) {
+            if (info.name != null) {
+              collection[i].userInfo.name = info.name
+            }
+            if (info.photo != null) {
+              collection[i].userInfo.photo = info.photo
+            }
+            if (info.rank != null) {
+              collection[i].userInfo.rank = info.rank
+            }
+            collection[i].save(err => {
+              if (err) throw err
+              return
+            })
+          }
+        })
+
+        /** Update userInfo nas Answers */
+        await Answer.find({ 'userInfo.userid': userid }, (err, collection) => {
+          if (err) throw err;
+          for (let i = 0; i < collection.length; i++) {
+            if (info.name != null) {
+              collection[i].userInfo.name = info.name
+            }
+            if (info.photo != null) {
+              collection[i].userInfo.photo = info.photo
+            }
+            if (info.rank != null) {
+              collection[i].userInfo.rank = info.rank
+            }
+            collection[i].save(err => {
+              if (err) throw err
+              return
+            })
+          }
+        })
+
+        /** Update userInfo nos Comments */
+        await Comment.find({ 'userInfo.userid': userid }, (err, collection) => {
+          if (err) throw err;
+          for (let i = 0; i < collection.length; i++) {
+            if (info.name != null) {
+              collection[i].userInfo.name = info.name
+            }
+            if (info.photo != null) {
+              collection[i].userInfo.photo = info.photo
+            }
+            if (info.rank != null) {
+              collection[i].userInfo.rank = info.rank
+            }
+            collection[i].save(err => {
+              if(err) throw err
+              return
+            })
+          }
+        })
+        return 
+      }
+      catch (err) {
+        throw err
+      }
+    }
+    update().then(resp => res.json({msg: "User Info was updated", success: true}))
   }
 };
 
