@@ -10,7 +10,7 @@ const expLogController = require("../controllers/expLog.controller");
 const statisticController = require("../controllers/statistics.controller");
 
 const verifyToken = require("../controllers/auth/VerifyToken");
-router.get("/", function(req, res) {
+router.get("/", function (req, res) {
   res.send("Route para as chamadas à base de dados.");
 });
 /**
@@ -81,13 +81,13 @@ router.put("/users/multiplenotis", verifyToken, (req, res) => {
     req.body.notification
   );
 });
-router.put("/users/addcomment/multiplenotis", verifyToken, (req, res) => {});
+router.put("/users/addcomment/multiplenotis", verifyToken, (req, res) => { });
 /** Fim das rotas para a página ViewProfile
  *  (pelo menos)
  */
 
 router.put("/users/:id", verifyToken, (req, res) => {
-  console.log(req.body.user,"USER RECEBIDO");
+  console.log(req.body.user, "USER RECEBIDO");
   userController.updateUser(res, req.params.id, req.body.user);
 });
 router.delete("/users/:id", verifyToken, (req, res) => {
