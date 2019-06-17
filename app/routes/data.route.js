@@ -149,7 +149,7 @@ router.put("/threads/:id/close", verifyToken, (req, res) => {
   threadController.closeDate(res, req.params.id);
 });
 router.put("/threads/:id/view", (req, res) => {
-  threadController.addView(req.params.id);
+  threadController.addView(res, req.params.id);
 });
 
 router.put("/threads/:id/upvote", verifyToken, (req, res) => {

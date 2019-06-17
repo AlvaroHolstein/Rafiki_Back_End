@@ -245,7 +245,7 @@ let crudThread = {
     }
   },
   //Add View
-  addView(id) {
+  addView(res, id) {
     try {
       Thread.findOneAndUpdate({ id: id }, { $inc: { views: 1 } }, function(
         err,
@@ -253,7 +253,7 @@ let crudThread = {
       ) {
         if (err) throw err;
         console.log(thread);
-        // res.json({msg: "success", data: thread})
+        res.json({msg: "success", data: thread, success: true})
       });
     } catch (err) {
       return res.status(400).send({ error: "Could not update threads" + err });
