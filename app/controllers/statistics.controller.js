@@ -275,7 +275,7 @@ let stats = {
           commentators.length = 5;
         } else {
           for (let j = 0; j < collection.length; j++) {
-            console.log("id1", topcommentators[0].id);
+            console.log("id1", commentators[0].id);//topcommentators[0].id);
             console.log("id2", collection[j].userInfo.userid);
             if (commentators[0].id == collection[j].userInfo.userid) {
               commentators[0].number += 1;
